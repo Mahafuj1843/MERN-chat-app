@@ -1,16 +1,49 @@
-import React, { Fragment } from 'react'
+import React, { Fragment, useEffect, useReducer } from 'react'
 import MyChat from '../components/MyChat'
 import ChatBox from '../components/ChatBox'
 import Header from '../components/Header'
+import { myChatRequest } from '../apiRequest/chatRequset'
+import { useSelector } from 'react-redux'
+import ChatUserSearch from '../components/drawer/ChatUserSearch'
+import GrpUserSearch from '../components/drawer/GrpUserSearch'
+import GroupInfo from '../components/drawer/GroupInfo'
+
+const drawer = (state, action) =>{
+    switch(action.type){
+      case 'SHOW':
+        return {show: true};
+      case 'HIDE':
+        return {show: false};
+      case 'SHOWGUS':
+        return {showGUS: true};
+      case 'HIDEGUS':
+        return {showGUS: false};
+      case 'SHOWGI':
+        return {showGI: true};
+      case 'HIDEGI':
+        return {showGI: false};
+      default:
+        return state;
+    }
+  }
 
 const ChatPage = () => {
+    const [state, dispatch] = useReducer(drawer, { show: false, showGUS: false , showGI: false})
+    const myChats = useSelector((state)=>state.chat.myChats)
+    useEffect(()=>{
+      myChatRequest()
+    }, [])
+
     return (
-        <Fragment>
+        <Fragment className='relative'>
+            <ChatUserSearch state={state} dispatch={dispatch}/>
+            <GrpUserSearch state={state} dispatch={dispatch}/>
+            <GroupInfo state={state} dispatch={dispatch}/>
             <Header />
-            <div class="bg-[#111b21] flex items-center justify-center h-screen overflow-y-hidden py-2" style={{height: "90vh"}}>
+            <div class="bg-white flex items-center justify-center h-screen overflow-y-hidden" style={{height: "90vh"}}>
                 <div class="flex h-full w-full overflow-y-hidden">
-                    <MyChat />
-                    <ChatBox />
+                    <MyChat myChats={myChats} dispatch={dispatch}/>
+                    <ChatBox dispatch={dispatch} />
                 </div>
             </div>
         </Fragment>

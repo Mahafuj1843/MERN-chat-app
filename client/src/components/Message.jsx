@@ -5,7 +5,7 @@ const Message = () => {
         <Fragment>
             {/* <!-- Date --> */}
             <div class="flex justify-center">
-                <span class="px-2 py-1 bg-[#182229] text-[#aebac1] rounded-md text-sm">21 April 2023</span>
+                <span class="px-2 py-1 bg-[#aebac1] text-gray-700 rounded-md text-sm">21 April 2023</span>
             </div>
             {/* <!-- Date --> */}
             <div className="chat chat-start">
