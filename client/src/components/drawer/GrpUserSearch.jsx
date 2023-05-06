@@ -14,19 +14,19 @@ const GrpUserSearch = ({ state, dispatch }) => {
     const searchUsers = useSelector((state) => state.chat.searchUsers)
     const selectForGrp = useSelector((state) => state.chat.selectForGrp)
 
-    useEffect(() => {
-        if (!showGUS) {
-            name.value = '',
-            search.value = '',
-            store.dispatch(setEmpty())
-        }
-    }, [showGUS])
-
     const onHandleSearch = async () => {
         setLoading(true)
         await searchUserRequest(search.value)
         setLoading(false)
     }
+
+    useEffect(()=>{
+        if(!showGUS){
+            store.dispatch(setEmpty())
+            search.value = ''
+            name.value = ''
+        }
+    },[showGUS])
 
     const onAddtoGrp = (user) => {
         if(selectForGrp.some((u)=>u._id===user._id)){
@@ -55,10 +55,10 @@ const GrpUserSearch = ({ state, dispatch }) => {
                     <div className='my-4 px-5'>
                         <input ref={(i) => name = i} type="text" name="grpName" id="grpName" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Group Name" required="" />
                     </div>
-                    <div class="flex gap-2 my-4 px-5">
+                    <div class="my-4 px-5">
                         <input ref={(i) => search = i} onChange={onHandleSearch} type="search" id="search" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Search User..." required />
                     </div>
-                    <div class="mt-2 mx-5 flex gap-2 h-fit border-y overflow-x-auto hover:scroll-auto">
+                    <div class="mt-2 mx-5 flex gap-2 h-fit border-y overflow-x-auto">
                         {
                             selectForGrp?.map((user, i) => {
                                 return(

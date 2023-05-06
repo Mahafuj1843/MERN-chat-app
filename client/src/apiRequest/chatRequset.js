@@ -3,7 +3,7 @@ import { ErrorToast, SuccessToast } from "../helper/formHelper";
 import { hideLoader, showLoader } from "../redux/state/settingSlice";
 import store from "../redux/store/store";
 import { getToken } from "../helper/sessionHelper";
-import { setMyChats } from "../redux/state/chatSlice";
+import { setMyChats, setSelectUser } from "../redux/state/chatSlice";
 import { useSelector } from "react-redux";
 const BaseURL = "http://localhost:8100/api"
 const AxiosHeader = { headers: { "token": getToken() } }
@@ -74,6 +74,33 @@ export const createGroupRequest = async (grpName, users) =>{
         if (res.status === 200) {
             const myChats = store.getState().chat.myChats
             store.dispatch(setMyChats([res.data, ...myChats]))
+            return true;
+        } else {
+            ErrorToast("Something Went Wrong")
+            return false;
+        }
+    }).catch((err) => {
+        store.dispatch(hideLoader())
+        if (err.response.data.status === 400) {
+            ErrorToast(err.response.data.message)
+            return false;
+        } else if (err.response.data.status === 403) {
+            ErrorToast(err.response.data.message)
+            return false;
+        } else {
+            ErrorToast("Something Went Wrong")
+            return false;
+        }
+    })
+}
+
+export const renameGroupRequest = async (grpName, grpId) =>{
+    let PostBody = { groupName : grpName, chatId: grpId }
+    let URL = BaseURL + "/chat/rename";
+    return await axios.put(URL, PostBody, AxiosHeader).then((res) => {
+        if (res.status === 200) {
+            store.dispatch(setSelectUser(res.data))
+            myChatRequest()
             return true;
         } else {
             ErrorToast("Something Went Wrong")
