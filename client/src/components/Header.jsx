@@ -1,15 +1,21 @@
 import React, { Fragment, useEffect, useRef, useState } from 'react'
-import { Link, useLocation, useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { ChangePasswordRequest, Logout, ProfileDetailsRequest, UpdateProfileRequest } from '../apiRequest/authRequest'
 import { getUserDetails } from '../helper/sessionHelper'
 import { ErrorToast, IsEmpty, IsPassword, getBase64 } from '../helper/formHelper'
 import { useSelector } from 'react-redux'
+import NotificationBadge from 'react-notification-badge'
+import { Effect } from 'react-notification-badge';
+import { setSelectUser } from '../redux/state/chatSlice'
+import { emptyNotification, removeNotification } from '../redux/state/settingSlice'
+import store from '../redux/store/store'
 
 const Header = () => {
     let fname, lname, image, imageView, oPassword, nPassword = useRef()
     const [toggle, setToggle] = useState(false)
     const navigate = useNavigate()
     let location = useLocation()
+    const notifications = useSelector((state) => state.setting.notifications)
 
     const onProfile = async () => {
         await ProfileDetailsRequest()
@@ -57,6 +63,7 @@ const Header = () => {
             imageView.src = base64Img;
         })
     }
+    console.log(notifications)
     return (
         <Fragment>
             <div class="flex justify-between bg-[#202c33] px-4 py-2 z-10">
@@ -64,11 +71,45 @@ const Header = () => {
                     <span class="text-2xl font-bold text-white">Instachat.</span>
                 </div>
                 <div class="flex items-center space-x-8">
-                    <svg viewBox="0 0 24 24" width="24" height="24">
-                        <path fill="#aebac1"
-                            d="M19.005 3.175H4.674C3.642 3.175 3 3.789 3 4.821V21.02l3.544-3.514h12.461c1.033 0 2.064-1.06 2.064-2.093V4.821c-.001-1.032-1.032-1.646-2.064-1.646zm-4.989 9.869H7.041V11.1h6.975v1.944zm3-4H7.041V7.1h9.975v1.944z">
-                        </path>
-                    </svg>
+                    <div className="px-1 h-35">
+                        <button onClick={() => setToggle(!toggle)}>
+                            <NotificationBadge count={notifications.length} effect={Effect.SCALE} />
+                            <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" viewBox="0 0 512 512" id="bell">
+                                <path fill="#aebac1" d="M381.7 225.9c0-97.6-52.5-130.8-101.6-138.2 0-.5.1-1 .1-1.6 0-12.3-10.9-22.1-24.2-22.1-13.3 0-23.8 9.8-23.8 22.1 0 .6 0 1.1.1 1.6-49.2 7.5-102 40.8-102 138.4 0 113.8-28.3 126-66.3 158h384c-37.8-32.1-66.3-44.4-66.3-158.2zM256.2 448c26.8 0 48.8-19.9 51.7-43H204.5c2.8 23.1 24.9 43 51.7 43z">
+                                </path>
+                            </svg>
+                        </button>
+                        <div className={`absolute ${toggle ? 'block' : 'hidden'} right-24 z-10 mt-2 w-80 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none`} role="menu" aria-orientation="vertical" aria-labelledby="menu-button" tabindex="-1">
+                            {
+                                notifications?.length > 0 ? (
+                                    <div onClick={()=>setToggle(!toggle)} className="p-1">
+                                        {
+                                            notifications.map((n, i)=>{
+                                                return(
+                                                    <span key={i} className="text-gray-700 block px-4 py-2 text-sm hover:bg-gray-300 cursor-pointer"
+                                                    onClick={()=>{
+                                                        store.dispatch(setSelectUser(n.chat))
+                                                        store.dispatch(removeNotification(n))
+                                                    }}
+                                                    >
+                                                    {
+                                                        n.chat.isGroupChat ? `New message in ${n.chat.chatName}` : 
+                                                        `New message from ${n.sender.firstname} ${n.sender.lastname}`
+                                                    }
+                                                    </span>
+                                                )
+                                            })
+                                        }
+                                        <span onClick={()=>store.dispatch(emptyNotification())} className="text-gray-700 text-center border-t block px-4 py-2 text-md font-medium cursor-pointer">Mark as read</span>
+                                    </div>
+                                ) : (
+                                    <div className="p-1">
+                                        <span className="text-gray-700 text-center block px-4 py-2 text-md font-medium">No New Message.</span>
+                                    </div>
+                                )
+                            }
+                        </div>
+                    </div>
                     <div className="dropdown dropdown-end dropdown-hover">
                         <img tabIndex={0} src={getUserDetails().photo} class="rounded-full h-12 w-12 object-fill" alt="Profile Image" />
                         <ul tabIndex={0} className="dropdown-content menu p-2 shadow bg-[#ffff] text-black rounded-box w-52">

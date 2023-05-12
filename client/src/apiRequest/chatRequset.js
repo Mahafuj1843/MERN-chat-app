@@ -2,7 +2,7 @@ import axios from "axios";
 import { ErrorToast, SuccessToast } from "../helper/formHelper";
 import { hideLoader, showLoader } from "../redux/state/settingSlice";
 import store from "../redux/store/store";
-import { getToken } from "../helper/sessionHelper";
+import { getToken, getUserDetails } from "../helper/sessionHelper";
 import { setMyChats, setSelectUser } from "../redux/state/chatSlice";
 import { useSelector } from "react-redux";
 const BaseURL = "http://localhost:8100/api"
@@ -108,6 +108,58 @@ export const renameGroupRequest = async (grpName, grpId) =>{
         }
     }).catch((err) => {
         store.dispatch(hideLoader())
+        if (err.response.data.status === 400) {
+            ErrorToast(err.response.data.message)
+            return false;
+        } else if (err.response.data.status === 403) {
+            ErrorToast(err.response.data.message)
+            return false;
+        } else {
+            ErrorToast("Something Went Wrong")
+            return false;
+        }
+    })
+}
+
+export const addToGroupRequest = async (chatId, users) =>{
+    let PostBody = { chatId: chatId, members: JSON.stringify(users.map((u)=> u._id)) }
+    let URL = BaseURL + "/chat/addToGroup";
+    return await axios.put(URL, PostBody, AxiosHeader).then((res) => {
+        if (res.status === 200) {
+            store.dispatch(setSelectUser(res.data))
+            myChatRequest()
+            return true;
+        } else {
+            ErrorToast("Something Went Wrong")
+            return false;
+        }
+    }).catch((err) => {
+        if (err.response.data.status === 400) {
+            ErrorToast(err.response.data.message)
+            return false;
+        } else if (err.response.data.status === 403) {
+            ErrorToast(err.response.data.message)
+            return false;
+        } else {
+            ErrorToast("Something Went Wrong")
+            return false;
+        }
+    })
+}
+
+export const removeFromGroupRequest = async (chatId, user) =>{
+    let PostBody = { chatId: chatId, userId: user._id }
+    let URL = BaseURL + "/chat/removeFromGroup";
+    return await axios.put(URL, PostBody, AxiosHeader).then((res) => {
+        if (res.status === 200) {
+            getUserDetails()._id === user._id ? store.dispatch(setSelectUser()) : store.dispatch(setSelectUser(res.data))
+            myChatRequest()
+            return true;
+        } else {
+            ErrorToast("Something Went Wrong")
+            return false;
+        }
+    }).catch((err) => {
         if (err.response.data.status === 400) {
             ErrorToast(err.response.data.message)
             return false;

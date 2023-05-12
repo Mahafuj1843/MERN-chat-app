@@ -4,6 +4,7 @@ import store from '../redux/store/store'
 import { setSelectUser } from '../redux/state/chatSlice'
 import { useSelector } from 'react-redux'
 const MyChat = ({ myChats, dispatch }) => {
+    const notifications = useSelector((state)=> state.setting.notifications)
     const getSender = (users, loggedUser) =>{
         return users[0]._id === loggedUser._id ? `${users[1].firstname} ${users[1].lastname}` : `${users[0].firstname} ${users[0].lastname}`
     }
@@ -12,6 +13,7 @@ const MyChat = ({ myChats, dispatch }) => {
         store.dispatch(setSelectUser(user))
     }
     const selectUser = useSelector((state)=>state.chat.selectUser)
+    
     return (
         <Fragment>
             <div class="flex flex-col flex-none h-full w-[30rem] border-r border-gray-600">
@@ -54,9 +56,9 @@ const MyChat = ({ myChats, dispatch }) => {
 
                         <div class="overflow-x-hidden overflow-y-auto flex-grow scroller h-10">
                             {
-                                myChats.map((items, i) => {
+                                myChats?.map((items, i) => {
                                     return (
-                                        <button key={i} onClick={accessChatMsg.bind(this, items)} class={`flex items-center w-full px-4 py-2 border-b transition-colors duration-200 gap-x-2 ${selectUser._id===items._id ? "bg-gray-200":"bg-white hover:bg-gray-200"} dark:hover:bg-gray-800 focus:outline-none`}>
+                                        <button key={i} onClick={accessChatMsg.bind(this, items)} class={`flex items-center w-full px-4 py-2 border-b transition-colors duration-200 gap-x-2 ${selectUser?._id===items._id ? "bg-gray-200":"bg-white hover:bg-gray-200"} dark:hover:bg-gray-800 focus:outline-none`}>
                                             <img class="object-cover w-12 h-12 rounded-full" src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=faceare&facepad=3&w=688&h=688&q=100" alt="" />
 
                                             <div className='flex justify-between w-full'>
@@ -67,10 +69,10 @@ const MyChat = ({ myChats, dispatch }) => {
                                                         }
                                                     </h1>
 
-                                                    <p class="text-xs text-gray-500 dark:text-gray-400">1.2 Followers</p>
+                                                    <p class={`${notifications.find((n)=>n.chat._id===items._id)?'text-[#00a884] font-medium':'text-gray-500 dark:text-gray-400'} text-xs`}>{`${items.latestMessage?.sender?._id === getUserDetails()._id ? 'You' : items.latestMessage?.sender?.firstname}: ${items.latestMessage?.content} `}</p>
                                                 </div>
                                                 <div class="flex flex-col flex-none text-xs items-end space-y-2 w-20 pr-2">
-                                                    <p class="text-xs text-gray-500 dark:text-gray-400">03/08/2023</p>
+                                                    <p class={`${notifications.find((n)=>n.chat._id===items._id)?'text-[#00a884] font-medium':'text-gray-500 dark:text-gray-400'} text-xs`}>03/08/2023</p>
                                                     <div class="flex bg-[#00a884] justify-center text-xs items-center rounded-full w-4 h-4 text-black">
                                                         1
                                                     </div>

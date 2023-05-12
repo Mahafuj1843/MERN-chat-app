@@ -30,9 +30,12 @@ const drawer = (state, action) =>{
 const ChatPage = () => {
     const [state, dispatch] = useReducer(drawer, { show: false, showGUS: false , showGI: false})
     const myChats = useSelector((state)=>state.chat.myChats)
+    const newMsg = useSelector((state) => state.chat.newMessage)
+    const allMessages = useSelector((state)=>state.chat.allMessages)
+
     useEffect(()=>{
       myChatRequest()
-    }, [])
+    }, [newMsg, allMessages])
 
     return (
         <Fragment className='relative'>

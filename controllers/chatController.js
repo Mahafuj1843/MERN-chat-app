@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import Chat from "../models/Chat.js";
 import User from "../models/User.js";
 import { createError } from "../utils/error.js";
@@ -15,7 +16,7 @@ export const accessChat = async (req, res, next) => {
 
     isChat = await User.populate(isChat, {
         path: "latestMessage.sender",
-        select: "name pic email",
+        select: "firstname lastname photo email",
     });
 
     if (isChat.length > 0) {
@@ -44,12 +45,12 @@ export const fetchChat = async (req, res, next) => {
         let results = Chat.find({ users: { $elemMatch: { $eq: req.user.id } } })
             .populate("users", "-password")
             .populate("groupAdmin", "-password")
-            .populate("latestMessage")
+            .populate("latestMessage.sender")
             .sort({ updatedAt: -1 })
-
-        results = await User.populate(results, {
+        
+     results = await User.populate(results, {
             path: "latestMessage.sender",
-            select: "firstname photo email",
+            select: "firstname lastname photo",
         });
         res.status(200).send(results)
     } catch (error) {
@@ -108,11 +109,13 @@ export const renameGroup = async (req, res, next) =>{
 }
 
 export const addToGroup = async (req, res, next) =>{
-    const { chatId, userId } = req.body
+    let olduser = await Chat.findById(req.body.chatId, { users: 1 })
+    let members = JSON.parse(req.body.members)
+    members = [ ...olduser.users, ...members ]
 
-    const addMember = await Chat.findByIdAndUpdate( chatId,
+    const addMember = await Chat.findByIdAndUpdate( req.body.chatId,
         {
-          $push: { users: userId },
+          users: members
         },
         {
           new: true,
@@ -129,18 +132,20 @@ export const addToGroup = async (req, res, next) =>{
 export const removeFromGroup = async (req, res, next) =>{
     const { chatId, userId } = req.body
 
-    const removeMember = await Chat.findByIdAndUpdate( chatId,
+	const removeMember = await Chat.findByIdAndUpdate( chatId,
         {
           $pull: { users: userId },
         },
         {
           new: true,
         }
-    ).populate("users", "-password").populate("groupAdmin", "-password");
+    	).populate("users", "-password").populate("groupAdmin", "-password");
     
-    if (!removeMember) {
+    	if (!removeMember) {
         return next(createError(404, "Chat Not Found"))
-    } else {
+    	} else {
         res.status(200).send(removeMember);
-    }
+    	}
 }
+
+

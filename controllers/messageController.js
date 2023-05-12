@@ -1,5 +1,6 @@
 import Chat from "../models/Chat.js";
 import Message from "../models/Message.js";
+import User from "../models/User.js";
 import { createError } from "../utils/error.js";
 
 export const sendMessage = async (req, res, next) =>{
@@ -16,15 +17,22 @@ export const sendMessage = async (req, res, next) =>{
   };
 
   try {
-    let message = await Message.create(newMsg);
+    let createMessage = await Message.create(newMsg);
+    
+    let result = await Message.findOne({ _id: createMessage._id }).populate("sender", "firstname lastname photo").populate("chat")
 
-    message = await message.populate("sender", "firstname lastname photo").populate("chat")
-    message = await User.populate(message, {
+    let message = await User.populate(result, {
       path: "chat.users",
       select: "firstname lastname photo email",
     });
-
-    await Chat.findByIdAndUpdate(chatId, { latestMessage: message })
+    
+    let show = await Chat.findByIdAndUpdate(chatId,
+    {
+	latestMessage: result,
+    },
+    {
+	new: true,
+    })
     res.status(200).send(message);
   } catch (error) {
     next(error)
