@@ -14,19 +14,38 @@ const io = new Server(host, {
 },
 })
 
+let users = [];
+
+const addUser = (userId, socketId) => {
+  !users.some((user) => user.userId === userId) &&
+    users.push({ userId, socketId });
+};
+
+const removeUser = (socketId) => {
+  users = users.filter((user) => user.socketId !== socketId);
+};
+
+const getUser = (userId) => {
+  return users.find((user) => user.userId === userId);
+};
+
 io.on("connection", (socket) => {
   console.log('connected to socket.io')
 
   socket.on("setup", (userData)=>{
     socket.join(userData._id)
+    addUser(userData._id, socket.id);
+    io.emit("getUsers", users);
     socket.emit("connected")
   })
 
   socket.on('join chat', (room) => {
     socket.join(room)
   })
-
-  socket.on('typing', (room)=> socket.in(room).emit('typing'))
+  
+  socket.on('typing', (room,user)=> {
+    socket.in(room).emit('typing', user)
+  })
   socket.on('stop typing', (room)=> socket.in(room).emit('stop typing'))
 
   socket.on("new msg", (newMsgRecieved)=>{
@@ -40,6 +59,8 @@ io.on("connection", (socket) => {
   })
 
   socket.off("setup", () => {
+    removeUser(socket.id);
+    io.emit("getUsers", users);
     console.log("USER DISCONNECTED");
     socket.leave(userData._id);
   });

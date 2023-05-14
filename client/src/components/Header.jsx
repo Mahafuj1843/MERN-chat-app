@@ -63,14 +63,14 @@ const Header = () => {
             imageView.src = base64Img;
         })
     }
-    console.log(notifications)
+
     return (
         <Fragment>
-            <div class="flex justify-between bg-[#202c33] px-4 py-2 z-10">
+            <div class="flex justify-between bg-[#0C7075] px-4 py-2 z-10">
                 <div class="logo flex items-center cursor-pointer">
                     <span class="text-2xl font-bold text-white">Instachat.</span>
                 </div>
-                <div class="flex items-center space-x-8">
+                <div class="flex items-center space-x-3 lg:space-x-8">
                     <div className="px-1 h-35">
                         <button onClick={() => setToggle(!toggle)}>
                             <NotificationBadge count={notifications.length} effect={Effect.SCALE} />
@@ -79,17 +79,17 @@ const Header = () => {
                                 </path>
                             </svg>
                         </button>
-                        <div className={`absolute ${toggle ? 'block' : 'hidden'} right-24 z-10 mt-2 w-80 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none`} role="menu" aria-orientation="vertical" aria-labelledby="menu-button" tabindex="-1">
+                        <div className={`absolute ${toggle ? 'block' : 'hidden'} right-6 md:right-24 z-10 mt-2 w-60 md:w-80 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none`} role="menu" aria-orientation="vertical" aria-labelledby="menu-button" tabindex="-1">
                             {
                                 notifications?.length > 0 ? (
                                     <div onClick={()=>setToggle(!toggle)} className="p-1">
                                         {
                                             notifications.map((n, i)=>{
                                                 return(
-                                                    <span key={i} className="text-gray-700 block px-4 py-2 text-sm hover:bg-gray-300 cursor-pointer"
+                                                    <span key={i} className="text-gray-700 block px-2 md:px-4 py-2 text-sm hover:bg-gray-300 cursor-pointer"
                                                     onClick={()=>{
                                                         store.dispatch(setSelectUser(n.chat))
-                                                        store.dispatch(removeNotification(n))
+                                                        store.dispatch(removeNotification(n.chat))
                                                     }}
                                                     >
                                                     {
@@ -100,7 +100,7 @@ const Header = () => {
                                                 )
                                             })
                                         }
-                                        <span onClick={()=>store.dispatch(emptyNotification())} className="text-gray-700 text-center border-t block px-4 py-2 text-md font-medium cursor-pointer">Mark as read</span>
+                                        <span onClick={()=>store.dispatch(emptyNotification())} className="text-gray-700 text-center border-t block px-2 md:px-4 py-2 text-sm md:text-md font-medium cursor-pointer">Mark as read</span>
                                     </div>
                                 ) : (
                                     <div className="p-1">

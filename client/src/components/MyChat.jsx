@@ -3,20 +3,27 @@ import { getUserDetails } from '../helper/sessionHelper'
 import store from '../redux/store/store'
 import { setSelectUser } from '../redux/state/chatSlice'
 import { useSelector } from 'react-redux'
+import moment from "moment/moment"
+import { getOnline, getSender } from '../helper/logic'
+import { removeNotification } from '../redux/state/settingSlice'
+
 const MyChat = ({ myChats, dispatch }) => {
     const notifications = useSelector((state)=> state.setting.notifications)
-    const getSender = (users, loggedUser) =>{
-        return users[0]._id === loggedUser._id ? `${users[1].firstname} ${users[1].lastname}` : `${users[0].firstname} ${users[0].lastname}`
+    const onlineUsers = useSelector((state)=> state.setting.onlineUsers)
+    const selectUser = useSelector((state)=>state.chat.selectUser)
+
+    const accessChatMsg = (chat) =>{
+        store.dispatch(setSelectUser(chat))
+        store.dispatch(removeNotification(chat))
     }
 
-    const accessChatMsg = (user) =>{
-        store.dispatch(setSelectUser(user))
+    const TextSearch = (e) => {
+
     }
-    const selectUser = useSelector((state)=>state.chat.selectUser)
     
     return (
         <Fragment>
-            <div class="flex flex-col flex-none h-full w-[30rem] border-r border-gray-600">
+            <div class={`${selectUser && 'hidden lg:block'} flex flex-col w-full lg:w-1/3 border-r overflow-hidden`}>
                 <div class="flex justify-between bg-white px-4 py-2 border-b">
                     <div class="flex items-center space-x-8 ms-auto">
                         <svg onClick={() => dispatch({ type: 'SHOWGUS' })} width="27" height="27" class="cursor-pointer" xmlns="http://www.w3.org/2000/svg" fill-rule="evenodd" stroke-linejoin="round" stroke-miterlimit="2" clip-rule="evenodd" viewBox="0 0 48 48" id="group">
@@ -46,42 +53,55 @@ const MyChat = ({ myChats, dispatch }) => {
                                         d="M15.009 13.805h-.636l-.22-.219a5.184 5.184 0 0 0 1.256-3.386 5.207 5.207 0 1 0-5.207 5.208 5.183 5.183 0 0 0 3.385-1.255l.221.22v.635l4.004 3.999 1.194-1.195-3.997-4.007zm-4.808 0a3.605 3.605 0 1 1 0-7.21 3.605 3.605 0 0 1 0 7.21z">
                                     </path>
                                 </svg>
-                                <input type="search" class="focus:outline-none bg-gray-200 w-full text-gray-500 text-xs"
+                                <input onKeyUp={TextSearch} type="search" class="focus:outline-none bg-gray-200 w-full text-gray-500 text-xs"
                                     placeholder="Search chat" />
                             </div>
-                            {/* <svg viewBox="0 0 24 24" width="20" height="20" class="cursor-pointer">
-                                <path fill="#aebac1" d="M10 18.1h4v-2h-4v2zm-7-12v2h18v-2H3zm3 7h12v-2H6v2z"></path>
-                            </svg>  */}
                         </div>
 
-                        <div class="overflow-x-hidden overflow-y-auto flex-grow scroller h-10">
+                        <div id='chat' class="overflow-x-hidden overflow-y-auto h-3/6 lg:h-[580px] xl:max-h-[489px] bg-gray-500">
                             {
                                 myChats?.map((items, i) => {
                                     return (
-                                        <button key={i} onClick={accessChatMsg.bind(this, items)} class={`flex items-center w-full px-4 py-2 border-b transition-colors duration-200 gap-x-2 ${selectUser?._id===items._id ? "bg-gray-200":"bg-white hover:bg-gray-200"} dark:hover:bg-gray-800 focus:outline-none`}>
-                                            <img class="object-cover w-12 h-12 rounded-full" src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=faceare&facepad=3&w=688&h=688&q=100" alt="" />
-
+                                        <button key={i} onClick={accessChatMsg.bind(this, items)} class={`flex items-center w-full px-4 py-2 border-b transition-colors duration-200 gap-x-3 ${selectUser?._id===items._id ? "bg-gray-200":"bg-white hover:bg-gray-200"} dark:hover:bg-gray-800 focus:outline-none`}>
+                                            <div class="relative w-14">
+                                                <img class={`${items.isGroupChat && 'bg-gray-300'} object-cover w-12 h-12 rounded-full`} 
+                                                    src= {`${items.isGroupChat ? 
+                                                            "https://cdn4.iconfinder.com/data/icons/internet-and-social-networking/32/i22_internet-512.png"
+                                                            :
+                                                            "https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=faceare&facepad=3&w=688&h=688&q=100"
+                                                            }`} alt="Chat image" />
+                                                {
+                                                    getOnline(items, onlineUsers, getUserDetails()) && 
+                                                    <span class="h-3 w-3 rounded-full bg-emerald-500 absolute right-0.5 ring-2 ring-white -bottom-0.5"></span>
+                                                }
+                                            </div>
                                             <div className='flex justify-between w-full'>
                                                 <div class="text-left rtl:text-right space-y-1">
-                                                    <h1 class="text-sm font-medium text-gray-700 capitalize dark:text-white">
+                                                    <h1 class="text-sm font-medium text-gray-700 capitalize dark:text-white ">
                                                         {items.isGroupChat ? 
-                                                            items.chatName : getSender(items.users, getUserDetails())
+                                                            items.chatName : getSender(items.users, getUserDetails()).firstname+' '+getSender(items.users, getUserDetails()).lastname
                                                         }
                                                     </h1>
-
-                                                    <p class={`${notifications.find((n)=>n.chat._id===items._id)?'text-[#00a884] font-medium':'text-gray-500 dark:text-gray-400'} text-xs`}>{`${items.latestMessage?.sender?._id === getUserDetails()._id ? 'You' : items.latestMessage?.sender?.firstname}: ${items.latestMessage?.content} `}</p>
+                                                    <div className={`${notifications.find((n)=>n.chat._id===items._id)?'text-[#00a884]':'text-gray-600 dark:text-gray-400'} flex gap-2 items-center`}>
+                                                        {
+                                                            items.latestMessage && (items.isGroupChat || items.latestMessage?.sender?._id === getUserDetails()._id) && 
+                                                            <span className='font-semibold text-sm'>{`${items.latestMessage?.sender?._id === getUserDetails()._id ? 'You' : items.latestMessage?.sender?.firstname}: `}</span>
+                                                        }
+                                                        <h3 className='font-medium text-xs'>{items.latestMessage ? items.latestMessage.content : ''}</h3>
+                                                    </div>
                                                 </div>
                                                 <div class="flex flex-col flex-none text-xs items-end space-y-2 w-20 pr-2">
-                                                    <p class={`${notifications.find((n)=>n.chat._id===items._id)?'text-[#00a884] font-medium':'text-gray-500 dark:text-gray-400'} text-xs`}>03/08/2023</p>
-                                                    <div class="flex bg-[#00a884] justify-center text-xs items-center rounded-full w-4 h-4 text-black">
+                                                    <p class={`${notifications.find((n)=>n.chat._id===items._id)?'text-[#00a884] font-medium':'text-gray-500 dark:text-gray-400'} text-xs`}>{moment(items.latestMessage?.createdAt).format("DD/MM/YYYY")}</p>
+                                                    {/* <div class="flex bg-[#00a884] justify-center text-xs items-center rounded-full w-4 h-4 text-black">
                                                         1
-                                                    </div>
+                                                    </div> */}
                                                 </div>
                                             </div>
                                         </button>
                                     )
                                 })
                             }
+
                             {/* <button class="flex items-center w-full px-4 py-2 border-b transition-colors duration-200 dark:hover:bg-gray-800 gap-x-2 bg-white hover:bg-gray-200 focus:outline-none">
                                 <img class="object-cover w-12 h-12 rounded-full" src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=faceare&facepad=3&w=688&h=688&q=100" alt="" />
 
@@ -98,16 +118,16 @@ const MyChat = ({ myChats, dispatch }) => {
                                             </div>
                                     </div>
                                 </div>
-                            </button> */}
+                            </button>
 
-                            {/* <button class="flex items-center w-full px-4 py-2 border-b transition-colors duration-200 dark:hover:bg-gray-800 gap-x-2 bg-white hover:bg-gray-200 focus:outline-none">
-                                <img class="object-cover w-12 h-12 rounded-full" src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=880&h=880&q=80" alt="" />
+                            <button class="flex items-center w-full px-4 py-2 border-b transition-colors duration-200 dark:hover:bg-gray-800 gap-x-2 bg-white hover:bg-gray-200 focus:outline-none">
+                                <img class="object-cover w-12 h-12 rounded-full bg-gray-300" src="https://cdn4.iconfinder.com/data/icons/internet-and-social-networking/32/i22_internet-512.png" alt="" />
 
                                 <div className='flex justify-between w-full'>
                                     <div class="text-left rtl:text-right space-y-1">
                                         <h1 class="text-sm font-medium text-gray-700 capitalize dark:text-white">arthur melo</h1>
 
-                                        <p class="text-xs text-gray-500 dark:text-gray-400">1.2 Followers</p>
+                                        <p class="text-xs text-gray-500 dark:text-gray-400">1.3 Followers</p>
                                     </div>
                                     <div class="flex flex-col flex-none text-xs items-end space-y-2 w-20 pr-2">
                                         <p class="text-xs text-gray-500 dark:text-gray-400">03/08/2023</p>
@@ -119,7 +139,7 @@ const MyChat = ({ myChats, dispatch }) => {
                             </button>
                             <button class="flex items-center w-full px-4 py-2 border-b transition-colors duration-200 bg-gray-200 dark:bg-gray-800 gap-x-2 focus:outline-none">
                                 <div class="relative">
-                                    <img class="object-cover w-12 h-12 rounded-full" src="https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=764&h=764&q=100" alt="" />
+                                    <img class="object-cover w-12 h-12 rounded-full" src="https://user-images.githubusercontent.com/1468166/37978116-46efb0e0-31b3-11e8-8d51-8d7af47d6f1c.png" alt="" />
                                     <span class="h-2 w-2 rounded-full bg-emerald-500 absolute right-0.5 ring-1 ring-white bottom-0"></span>
                                 </div>
 
@@ -138,7 +158,7 @@ const MyChat = ({ myChats, dispatch }) => {
                                 </div>
                             </button>
                             <button class="flex items-center w-full px-4 py-2 border-b transition-colors duration-200 dark:hover:bg-gray-800 gap-x-2 bg-white hover:bg-gray-200 focus:outline-none">
-                                <img class="object-cover w-12 h-12 rounded-full" src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=faceare&facepad=3&w=688&h=688&q=100" alt="" />
+                                <img class="object-cover w-12 h-12 rounded-full bg-gray-300" src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=faceare&facepad=3&w=688&h=688&q=100" alt="" />
 
                                 <div class="text-left rtl:text-right space-y-1">
                                     <h1 class="text-sm font-medium text-gray-700 capitalize dark:text-white">Mia John</h1>
@@ -231,6 +251,7 @@ const MyChat = ({ myChats, dispatch }) => {
                                     </div>
                                 </div>
                             </button> */}
+
                         </div>
                     </div>
                 </div>

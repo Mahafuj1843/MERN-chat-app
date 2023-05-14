@@ -5,6 +5,7 @@ export const settingSlice = createSlice({
     initialState: {
         loader: 'none',
         notifications: [],
+        onlineUsers: []
     },
 
     reducers:{
@@ -20,13 +21,16 @@ export const settingSlice = createSlice({
             state.notifications = [action.payload, ...state.notifications]
         },
         removeNotification:(state, action)=>{
-            state.notifications = state.notifications.filter((n)=>n.chat._id!==action.payload.chat._id)
+            state.notifications = state.notifications.filter((n)=>n.chat._id!==action.payload._id)
         },
         emptyNotification:(state, action)=>{
             state.notifications = []
+        },
+        setOnlineUsers:(state, action)=>{
+            state.onlineUsers = action.payload
         }
     }
 })
 
-export const { showLoader, hideLoader, setNotification, removeNotification, emptyNotification } = settingSlice.actions
+export const { showLoader, hideLoader, setNotification, removeNotification, emptyNotification, setOnlineUsers } = settingSlice.actions
 export default settingSlice.reducer

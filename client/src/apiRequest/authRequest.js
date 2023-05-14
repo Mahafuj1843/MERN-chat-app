@@ -229,7 +229,6 @@ export const searchUserRequest = async (search) =>{
     let URL = BaseURL + `/user?search=${search}`;
     return await axios.get(URL, AxiosHeader).then((res) => {
         if (res.status === 200) {
-            console.log(res.data)
             store.dispatch(setsearchUsers(res.data))
             return true;
         } else {

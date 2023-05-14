@@ -10,6 +10,7 @@ import store from '../../redux/store/store'
 import { removeSelectForGrp, setEmpty, setSelectForGrp, setsearchUsers } from '../../redux/state/chatSlice'
 import { useEffect } from 'react'
 import { DeleteAlert } from '../../helper/alert'
+import { getOnline, getSender } from '../../helper/logic'
 
 const GroupInfo = ({ state, dispatch }) => {
   const { showGI } = state
@@ -20,13 +21,7 @@ const GroupInfo = ({ state, dispatch }) => {
   const selectUser = useSelector((state) => state.chat.selectUser)
   const searchUsers = useSelector((state) => state.chat.searchUsers)
   const selectForGrp = useSelector((state) => state.chat.selectForGrp)
-
-  const getSender = (users, loggedUser) => {
-    return users[0]._id === loggedUser._id ? `${users[1].firstname} ${users[1].lastname}` : `${users[0].firstname} ${users[0].lastname}`
-  }
-  const getSenderemail = (users, loggedUser) => {
-    return users[0]._id === loggedUser._id ? `${users[1].email}` : `${users[0].email}`
-  }
+  const onlineUsers = useSelector((state) => state.setting.onlineUsers)
 
   const onUpdate = async () => {
     if (IsEmpty(grpName.value)) {
@@ -72,15 +67,15 @@ const GroupInfo = ({ state, dispatch }) => {
       }
     }
   }
-  const onLeaveGrp  = async (user) =>{
+  const onLeaveGrp = async (user) => {
     let result = await DeleteAlert(`Exit '${selectUser?.chatName}' group?`);
     if (result.isConfirmed) {
-      if(await removeFromGroupRequest(selectUser._id, user))
+      if (await removeFromGroupRequest(selectUser._id, user))
         dispatch({ type: 'HIDEGI' })
     }
   }
 
-  const onRemove = async (user) =>{
+  const onRemove = async (user) => {
     let result = await DeleteAlert(`Remove ${user.firstname} from the '${selectUser?.chatName}' group?`);
     if (result.isConfirmed) {
       await removeFromGroupRequest(selectUser._id, user)
@@ -89,12 +84,12 @@ const GroupInfo = ({ state, dispatch }) => {
 
   return (
     <Fragment >
-      <aside class="fixed h-full w-full z-50 left-0 top-0 transition duration-300 ease-in-out font-mono" style={{ display: showGI ? 'block' : 'none' }}>
+      <aside class="fixed h-full w-full z-50 left-0 top-0 transition duration-300 ease-in-out" style={{ display: showGI ? 'block' : 'none' }}>
         <div onClick={() => dispatch({ type: 'HIDEGI' })} class="fixed h-full w-full left-0 top-0 bg-black bg-opacity-50 z-[-1]"></div>
         {
           selectUser?.users?.length > 0 &&
-          <div class="fixed h-full w-1/2 sm:w-72 right-0 top-0 bg-white shadow-lg pt-8 p-x2 transition duration-700 ease-in-out" style={{ right: showGI ? '0%' : '100%' }}>
-            <div className='px-5 flex justify-between item-center'>
+          <div class="fixed h-full w-5/6 md:w-3/6 lg:w-2/6 xl:w-1/4 right-0 top-0 bg-white shadow-lg pt-8 transition duration-700 ease-in-out" style={{ right: showGI ? '0%' : '100%' }}>
+            <div className='px-3 md:px-5 flex justify-between item-center'>
               <h2 class="text-lg font-medium text-gray-800 dark:text-white">Info</h2 >
               {
                 selectUser?.groupAdmin?._id === getUserDetails()._id &&
@@ -117,25 +112,34 @@ const GroupInfo = ({ state, dispatch }) => {
             <div className='flex flex-col h-full text-center space-y-2'>
               <div class="w-full relative flex item-center justify-center">
                 <div class="relative">
-                  <img class="object-cover w-24 h-24 rounded-full" src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=faceare&facepad=3&w=688&h=688&q=100" alt="" />
-                  <span class="h-4 w-4 rounded-full bg-emerald-500 absolute right-1 ring-1 ring-white bottom-1"></span>
+                  <img class={`${selectUser.isGroupChat && 'bg-gray-300'} object-cover w-24 h-24 rounded-full`}
+                    src={`${selectUser.isGroupChat ?
+                      "https://cdn4.iconfinder.com/data/icons/internet-and-social-networking/32/i22_internet-512.png"
+                      :
+                      "https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=faceare&facepad=3&w=688&h=688&q=100"
+                      }`} 
+                  alt="Chat image" />
+                  {
+                    selectUser && getOnline(selectUser, onlineUsers, getUserDetails())
+                    &&
+                    <span class="h-4 w-4 rounded-full bg-emerald-500 absolute right-1 ring-2 ring-white bottom-1"></span>
+                  }
                 </div>
-
               </div>
-              <div className='text-black px-5 pb-2 border-b'>
+              <div className='text-black px-3 md:px-5 pb-2 border-b'>
                 <h1 className='text-lg font-semibold'>{selectUser.isGroupChat ?
-                  selectUser.chatName : getSender(selectUser.users, getUserDetails())
+                  selectUser.chatName : getSender(selectUser.users, getUserDetails()).firstname + ' ' + getSender(selectUser.users, getUserDetails()).lastname
                 }
                 </h1>
                 {selectUser.isGroupChat ?
                   <p className='text-sm'>Group &middot; {selectUser.users.length} participants</p>
                   :
-                  getSenderemail(selectUser.users, getUserDetails())
+                  getSender(selectUser.users, getUserDetails()).email
                 }
               </div>
               {selectUser?.isGroupChat &&
                 <div className='flex flex-col gap-2 h-2/3'>
-                  <div className='w-full px-5 flex justify-between'>
+                  <div className='w-full px-3 md:px-5 flex justify-between'>
                     <span className='text-sm'>{selectUser.users.length} participants</span>
                     <svg viewBox="0 0 24 24" width="24" height="24" class="">
                       <path fill="text-gary-700"
@@ -149,17 +153,24 @@ const GroupInfo = ({ state, dispatch }) => {
                       {
                         selectUser.users?.map((user, i) => {
                           return (
-                            <div key={i} class="flex items-center w-full px-5 py-2 transition-colors duration-200 dark:hover:bg-gray-800 gap-x-2 hover:bg-gray-100 focus:outline-none">
-                              <img class="object-cover w-11 h-11 rounded-full" src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=880&h=880&q=80" alt="" />
-
+                            <div key={i} class="flex items-center w-full px-3 md:px-5 py-2 transition-colors duration-200 dark:hover:bg-gray-800 gap-x-1 md:gap-x-2 hover:bg-gray-100 focus:outline-none">
+                              <div class="relative w-14">
+                                <img class="object-cover w-10 md:w-11 h-10 md:h-11 rounded-full" src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=880&h=880&q=80" alt="" />
+                                {
+                                  onlineUsers.find((u) => u.userId === user._id)
+                                  &&
+                                  <span class="h-3 w-3 rounded-full bg-emerald-500 absolute right-0.5 ring-2 ring-white bottom-0"></span>
+                                }
+                              </div>
                               <div className='w-full h-full flex justify-between item-center'>
                                 <div class="text-left rtl:text-right space-y-1 w-2/3 truncate">
                                   <h1 class="text-sm font-semibold text-gray-700 truncate capitalize dark:text-white">{user.firstname + ' ' + user.lastname}</h1>
                                   <p class="text-xs text-gray-500 dark:text-gray-400 truncate ">{user.email}</p>
                                 </div>
                                 {
-                                  user._id === selectUser.groupAdmin._id &&
-                                  <span class="inline-flex items-center h-5 rounded-md bg-indigo-50 px-2 py-1 text-xs font-medium text-indigo-700 ring-1 ring-inset ring-indigo-700/10">Admin</span>
+                                  user._id === selectUser.groupAdmin._id
+                                  &&
+                                  <span class="inline-flex items-center h-4 rounded-md bg-[#afd8da] px-1 md:px-2 py-1 text-xs font-medium text-[#0C7075] ring-1 ring-inset ring-[#2b9fa5]">Admin</span>
                                 }
                                 {
                                   user._id !== selectUser.groupAdmin._id && selectUser.groupAdmin._id === getUserDetails()._id &&
@@ -170,7 +181,9 @@ const GroupInfo = ({ state, dispatch }) => {
                                       </path>
                                     </svg>
                                     <ul tabIndex={0} className="dropdown-content menu p-2 shadow bg-[#ffff] text-black rounded-box w-52">
-                                      <li><label className='hover:bg-gray-200'>Make group admin</label></li>
+                                      <li className="tooltip tooltip-top" data-tip="under development">
+                                        <label className='hover:bg-gray-200'>Make group admin</label>
+                                      </li>
                                       <li><label onClick={onRemove.bind(this, user)} className='hover:bg-gray-200'>Remove {user.firstname}</label></li>
                                     </ul>
                                   </div>
@@ -182,7 +195,7 @@ const GroupInfo = ({ state, dispatch }) => {
                       }
                     </div>
                   }
-                  <button onClick={onLeaveGrp.bind(this, getUserDetails())} className='flex item-center gap-2 btn btn-primary mx-5'>
+                  <button onClick={onLeaveGrp.bind(this, getUserDetails())} className='flex item-center gap-3 btn bg-[#0C7075] hover:bg-[#0d5053] mx-5'>
                     <span>
                       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 64 64" id="logout"><path fill="white" d="M53.22 43.92c-1.73 0-3.13 1.41-3.13 3.13l-.07 10.68-36.79-.07.07-51.39 36.79.07v10.6c0 1.73 1.4 3.14 3.13 3.14s3.14-1.41 3.14-3.14V5.85c0-3.23-2.63-5.85-5.85-5.85h-37.7C9.57 0 6.95 2.62 6.95 5.85v52.3c0 3.23 2.62 5.85 5.85 5.85h37.7c3.22 0 5.85-2.62 5.85-5.85V47.06c0-1.73-1.41-3.14-3.13-3.14z"></path><path fill="white" d="M56.49 30.98 40.44 20.36c-.38-.25-.86-.27-1.26-.05-.4.21-.64.62-.64 1.08v4.24H16.4a.49.49 0 0 0-.49.49v11.76c0 .27.22.49.49.49h22.14v4.25c0 .45.24.86.64 1.08.19.1.39.14.59.14.23 0 .47-.06.67-.2L56.5 33.02c.34-.22.55-.61.55-1.02s-.22-.8-.56-1.02z"></path></svg>
                     </span>
@@ -205,7 +218,7 @@ const GroupInfo = ({ state, dispatch }) => {
             <div className='w-2/3'>
               <input ref={(i) => grpName = i} defaultValue={selectUser?.chatName} type="text" name="grpName" id="grpName" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Group Name" required="" />
             </div>
-            <button onClick={onUpdate} className='flex gap-1 item-center btn-primary rounded-md px-3 py-2'>
+            <button onClick={onUpdate} className='flex gap-1 item-center bg-[#0C7075] rounded-md px-3 py-2'>
               {loading && <img className='w-6 h-6' src={logingIcon} alt="" srcset="" />}
               Update
             </button>
@@ -219,8 +232,8 @@ const GroupInfo = ({ state, dispatch }) => {
         <div className="modal-box relative">
           <label onClick={() => setShow(!show)} htmlFor="my-modal-AddP" className="btn btn-sm btn-circle absolute right-2 top-2">✕</label>
           <h3 className="absolute left-4 top-3 text-lg font-bold pb-4">Add participant</h3>
-          <div className='mt-8 mx-4'>
-            <div class="flex space-x-2 items-center px-4 pb-2">
+          <div className='mt-8 mx-0 md:mx-4'>
+            <div class="flex space-x-1 md:space-x-2 items-center px-1 md:px-4 pb-2">
               <div class="flex-grow h-10 flex items-center space-x-2 bg-gray-200 py-1 px-4 rounded-md">
                 <svg viewBox="0 0 24 24" width="32" height="32" class="cursor-pointer">
                   <path fill="text-gray-700"
@@ -238,7 +251,7 @@ const GroupInfo = ({ state, dispatch }) => {
                     <button onClick={onAddtoGrp.bind(this, user)} class="flex flex-col w-fit py-2 transition-colors duration-200 dark:hover:bg-gray-800 gap-x-2 focus:outline-none">
                       <div class="relative px-1">
                         <img class="object-cover w-11 h-11 rounded-full" src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=faceare&facepad=3&w=688&h=688&q=100" alt="" />
-                        <span class="h-4 w-4 flex item-center justify-center rounded-full bg-emerald-500 absolute right-0.5 ring-1 ring-white bottom-0 -right-1">
+                        <span class="h-4 w-4 flex item-center justify-center rounded-full bg-gray-500 absolute right-0.5 ring-1 ring-white bottom-0">
                           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" id="close"><path fill="white" d="M7 18a1 1 0 0 1-.707-1.707l10-10a1 1 0 0 1 1.414 1.414l-10 10A.997.997 0 0 1 7 18Z"></path><path fill="white" d="M17 18a.997.997 0 0 1-.707-.293l-10-10a1 1 0 0 1 1.414-1.414l10 10A1 1 0 0 1 17 18Z"></path></svg>
                         </span>
                       </div>
@@ -255,22 +268,17 @@ const GroupInfo = ({ state, dispatch }) => {
                 <img src={logingIcon} className='h-10 w-10' alt="" srcset="" />
               </div>
               :
-              (<div class="mt-3 mx-5 space-y-1 h-64 overflow-y-auto">
+              (<div class="mt-3 mx-1 md:mx-5 space-y-1 h-64 overflow-y-auto">
                 {
                   searchUsers?.map((user, i) => {
                     return (
                       selectUser?.users?.find((u) => u._id === user._id) ?
                         (
-                          <button key={i} disabled class="flex items-center w-full px-5 py-2 transition-colors duration-200 bg-gray-100 dark:bg-gray-800 gap-x-2 focus:outline-none">
+                          <button key={i} disabled class="flex items-center w-full px-1 md:px-5 py-2 transition-colors duration-200 bg-gray-100 dark:bg-gray-800 gap-x-2 focus:outline-none">
                             <div class="relative px-1">
                               <img class="object-cover w-11 h-11 rounded-full" src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=faceare&facepad=3&w=688&h=688&q=100" alt="" />
-                              <span class="h-4 w-4 flex item-center justify-center rounded-full bg-emerald-500 absolute right-0.5 ring-1 ring-white bottom-0">
-                                {/* {
-                                  selectForGrp.some((u) => u._id === user._id) ? */}
+                              <span class="h-4 w-4 flex item-center justify-center rounded-full bg-gray-500 absolute right-0.5 ring-1 ring-white bottom-0">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" id="done"><path fill="none" d="M0 0h24v24H0V0z"></path><path fill="white" d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"></path></svg>
-                                {/* :
-                                    ""
-                                } */}
                               </span>
                             </div>
                             <div class="text-left rtl:text-right space-y-1">
@@ -280,10 +288,10 @@ const GroupInfo = ({ state, dispatch }) => {
                             </div>
                           </button>
                         ) : (
-                          <button key={i} onClick={onAddtoGrp.bind(this, user)} class="flex items-center w-full px-5 py-2 transition-colors duration-200 bg-gray-100 dark:bg-gray-800 gap-x-2 focus:outline-none">
+                          <button key={i} onClick={onAddtoGrp.bind(this, user)} class="flex items-center w-full px-1 md:px-5 py-2 transition-colors duration-200 bg-gray-100 dark:bg-gray-800 gap-x-2 focus:outline-none">
                             <div class="relative px-1">
                               <img class="object-cover w-11 h-11 rounded-full" src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=faceare&facepad=3&w=688&h=688&q=100" alt="" />
-                              <span class="h-4 w-4 flex item-center justify-center rounded-full bg-emerald-500 absolute right-0.5 ring-1 ring-white bottom-0">
+                              <span class={`${selectForGrp.find((u) => u._id === user._id) ? 'h-4 w-4 bg-gray-600 right-0.5 ring-1 ring-white bottom-0' : onlineUsers.find((u) => u.userId === user._id) ? 'h-3 w-3 bg-emerald-500 right-0.5 ring-1 ring-white bottom-0' : 'hidden'} flex item-center justify-center rounded-full absolute right-0.5 ring-1 ring-white bottom-0`}>
                                 {
                                   selectForGrp.some((u) => u._id === user._id) ?
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" id="done"><path fill="none" d="M0 0h24v24H0V0z"></path><path fill="white" d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"></path></svg>
@@ -377,7 +385,7 @@ const GroupInfo = ({ state, dispatch }) => {
           </div>
           {
             selectForGrp?.length > 0 &&
-            <button onClick={onAddtoGroup} className='z-50 p-4 text-md text-white rounded-full bg-gray-700 absolute right-16 hover:bg-gray-500 bottom-7'>
+            <button onClick={onAddtoGroup} className='z-50 p-3 md:p-4 text-md text-white rounded-full absolute right-7 md:right-16 bottom-7 bg-[#0C7075] hover:bg-[#0d4447]'>
               {
                 loadings ?
                   <img src={logingIcon} className='h-10 w-10' alt="" srcset="" />

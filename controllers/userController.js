@@ -6,7 +6,6 @@ export const allUser = async (req, res, next) =>{
         $or : [
             { firstname: {$regex: req.query.search, $options: 'i'}},
 	    { lastname: {$regex: req.query.search, $options: 'i'}},
-            { email: {$regex: req.query.search, $options: 'i'}},
         ]
     } : {}
 

@@ -38,12 +38,12 @@ const ChatPage = () => {
     }, [newMsg, allMessages])
 
     return (
-        <Fragment className='relative'>
+        <Fragment className='relative h-screen'>
             <ChatUserSearch state={state} dispatch={dispatch}/>
             <GrpUserSearch state={state} dispatch={dispatch}/>
             <GroupInfo state={state} dispatch={dispatch}/>
             <Header />
-            <div class="bg-white flex items-center justify-center h-screen overflow-y-hidden" style={{height: "90vh"}}>
+            <div className="bg-white flex items-center justify-center h-screen overflow-y-hidden" style={{height: "90vh"}}>
                 <div class="flex h-full w-full overflow-y-hidden">
                     <MyChat myChats={myChats} dispatch={dispatch}/>
                     <ChatBox dispatch={dispatch} />
@@ -51,6 +51,6 @@ const ChatPage = () => {
             </div>
         </Fragment>
     )
-}
+}////h-[89vh] xl:h-[90vh]
 
 export default ChatPage
