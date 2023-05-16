@@ -5,7 +5,7 @@ import { hideLoader, showLoader } from "../redux/state/settingSlice";
 import store from "../redux/store/store";
 import { setProfile } from "../redux/state/profileSlice";
 import { setsearchUsers } from "../redux/state/chatSlice";
-const BaseURL = "http://localhost:8100/api"
+const BaseURL = "https://instachat-api.onrender.com/api"
 const AxiosHeader = { headers: { "token": getToken() } }
 
 export const RegistrationRequest = (firstname, lastname, email, password) => {

@@ -1,78 +1,82 @@
 import React, { Fragment, useRef, useState } from 'react'
-import { Link, useNavigate  } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { ErrorToast, IsEmail, IsPassword } from '../helper/formHelper'
 import { LoginRequest } from '../apiRequest/authRequest'
+import logo from '../assets/images/logo.png'
 
 const Login = () => {
     const [show, setShow] = useState(false)
     let email, password = useRef()
     let navigate = useNavigate()
 
-    const onLogin = async () =>{
-        if(IsEmail(email.value)){
+    const onLogin = async () => {
+        if (IsEmail(email.value)) {
             ErrorToast("Invalid email address.")
-          }
-          else if(IsPassword(password.value)){
-              ErrorToast("Password must be six characters, at least one letter and one number !")
-          }
-          else{
-            await LoginRequest(email.value,password.value).then((result)=>{
-              if(result) window.location.href = '/chat'
-              else navigate('/')
+        }
+        else if (IsPassword(password.value)) {
+            ErrorToast("Password must be six characters, at least one letter and one number !")
+        }
+        else {
+            await LoginRequest(email.value, password.value).then((result) => {
+                if (result) window.location.href = '/chat'
+                else navigate('/')
             })
-          }
+        }
     }
     return (
         <Fragment>
-            <section class="bg-gray-50 dark:bg-gray-900">
-                <div class="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
-                    <a href="#" class="flex items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white">
-                        <img class="w-8 h-8 mr-2" src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/logo.svg" alt="logo" />
+            <section className="bg-gray-50 dark:bg-gray-900">
+                <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
+                    <a href="#" className="flex items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white">
+                        <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="35" height="35" viewBox="0,0,256,256"
+                            style={{ fill: "#000000" }}>
+                            <g fill="#0c7075" fill-rule="nonzero" stroke="none" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="10" stroke-dasharray="" stroke-dashoffset="0" font-family="none" font-weight="none" font-size="none" text-anchor="none" style={{ mixBlendMode: "normal" }}><g transform="scale(5.12,5.12)"><path d="M12.00781,0c-0.26656,-0.00206 -0.52291,0.10239 -0.71213,0.29015c-0.18922,0.18776 -0.29566,0.44329 -0.29568,0.70985v12.35352c-0.00045,0.38468 0.21978,0.73553 0.56641,0.90234l18,8.64649c0.31871,0.15285 0.69443,0.12612 0.98828,-0.07031l9,-6c0.29056,-0.19328 0.45936,-0.52403 0.4454,-0.87272c-0.01396,-0.34869 -0.20867,-0.66489 -0.51376,-0.83431l-27,-15c-0.14652,-0.08107 -0.31106,-0.12405 -0.47852,-0.125zM13,2.70117l24.08008,13.37695l-7.16016,4.77344l-16.91992,-8.12695zM11.95898,17c-0.53618,0.02206 -0.95938,0.46337 -0.95898,1v31c0.00047,0.01108 0.00112,0.02215 0.00195,0.0332c0.00131,0.0294 0.00392,0.05872 0.00781,0.08789c0.00053,0.00912 0.00118,0.01824 0.00195,0.02734c0.00357,0.02556 0.00813,0.05097 0.01367,0.07617c0.00246,0.0098 0.00506,0.01957 0.00781,0.0293c0.00476,0.01706 0.00997,0.034 0.01563,0.05078c0.00916,0.02845 0.01958,0.05647 0.03125,0.08398c0.01282,0.03064 0.02716,0.06063 0.04297,0.08984c0.01612,0.02951 0.03372,0.0582 0.05273,0.08594c0.01481,0.02144 0.03044,0.04229 0.04688,0.0625c0.00952,0.01128 0.01929,0.02235 0.0293,0.0332c0.01016,0.0113 0.02058,0.02237 0.03125,0.0332c0.00894,0.00929 0.01805,0.01841 0.02734,0.02734c0.01638,0.01621 0.03332,0.03184 0.05078,0.04688c0.00962,0.008 0.01939,0.01581 0.0293,0.02344c0.01592,0.01221 0.0322,0.02393 0.04883,0.03516c0.00965,0.00668 0.01942,0.01319 0.0293,0.01953c0.02535,0.01614 0.05142,0.03113 0.07813,0.04492c0.02553,0.01283 0.05159,0.02456 0.07813,0.03516c0.00777,0.00335 0.01558,0.00661 0.02344,0.00977c0.01614,0.00562 0.03242,0.01083 0.04883,0.01563c0.01999,0.00649 0.04018,0.01236 0.06055,0.01758c0.01102,0.00279 0.02209,0.0054 0.0332,0.00781c0.01619,0.00366 0.03247,0.00692 0.04883,0.00977c0.02463,0.00353 0.04939,0.00613 0.07422,0.00781c0.0052,0.00069 0.01041,0.00134 0.01563,0.00195c0.00391,0.00002 0.00781,0.00002 0.01172,0c0.02925,0.00194 0.05858,0.00259 0.08789,0.00195c0.03331,-0.00094 0.06656,-0.00355 0.09961,-0.00781c0.02621,-0.00352 0.05227,-0.00808 0.07813,-0.01367c0.00718,-0.00122 0.01434,-0.00253 0.02149,-0.00391c0.01046,-0.00244 0.02088,-0.00504 0.03125,-0.00781c0.0217,-0.00579 0.04319,-0.0123 0.06445,-0.01953c0.00065,0 0.0013,0 0.00195,0c0.03053,-0.01091 0.06052,-0.02329 0.08984,-0.03711c0.02726,-0.01182 0.05398,-0.02486 0.08008,-0.03906l28,-16c0.31186,-0.17821 0.5042,-0.50996 0.50391,-0.86914v-13c-0.00008,-0.40744 -0.24733,-0.77411 -0.62504,-0.92691c-0.37771,-0.1528 -0.81035,-0.06119 -1.09371,0.23159l-25.0957,25.99219l6.76953,-22.00195c0.13351,-0.43334 -0.04124,-0.90228 -0.42578,-1.14258l-8,-5c-0.17045,-0.10701 -0.36921,-0.1601 -0.57031,-0.15234zM13,19.80469l5.81836,3.63672l-5.81836,18.91016zM39,22.47461v9.94531l-21.41797,12.23828z"></path></g></g>
+                        </svg>
                         Instachat
                     </a>
-                    <div class="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
-                        <div class="p-6 space-y-4 md:space-y-6 sm:p-8">
-                            <h1 class="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
+                    <div className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
+                        <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
+                            <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
                                 Sign in to your account
                             </h1>
-                            <div class="space-y-4 md:space-y-6">
+                            <div className="space-y-4 md:space-y-6">
                                 <div>
-                                    <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Your email</label>
-                                    <input ref={(i)=>email=i} type="email" name="email" id="email" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="name@company.com" required="" />
+                                    <label for="email" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Your email</label>
+                                    <input ref={(i) => email = i} type="email" name="email" id="email" className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-[#0C7075] focus:border-[#0C7075] block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-[#0C7075] dark:focus:border-[#0C7075]" placeholder="name@company.com" required="" />
                                 </div>
                                 <div>
-                                    <label for="password" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Password</label>
-                                    <div class="relative w-full">
-                                        <div class="absolute inset-y-0 right-0 flex items-center px-2">
-                                            <label onClick={()=>setShow(!show)} class="hover:bg-gray-200 rounded px-2 py-1 text-sm text-gray-600 font-mono cursor-pointer js-password-label" for="toggle">
-                                                { show ? 
-                                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="black" class="bi bi-eye-slash" viewBox="0 0 16 16"> 
-                                                        <path d="M13.359 11.238C15.06 9.72 16 8 16 8s-3-5.5-8-5.5a7.028 7.028 0 0 0-2.79.588l.77.771A5.944 5.944 0 0 1 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13.134 13.134 0 0 1 14.828 8c-.058.087-.122.183-.195.288-.335.48-.83 1.12-1.465 1.755-.165.165-.337.328-.517.486l.708.709z"/> <path d="M11.297 9.176a3.5 3.5 0 0 0-4.474-4.474l.823.823a2.5 2.5 0 0 1 2.829 2.829l.822.822zm-2.943 1.299.822.822a3.5 3.5 0 0 1-4.474-4.474l.823.823a2.5 2.5 0 0 0 2.829 2.829z"/> <path d="M3.35 5.47c-.18.16-.353.322-.518.487A13.134 13.134 0 0 0 1.172 8l.195.288c.335.48.83 1.12 1.465 1.755C4.121 11.332 5.881 12.5 8 12.5c.716 0 1.39-.133 2.02-.36l.77.772A7.029 7.029 0 0 1 8 13.5C3 13.5 0 8 0 8s.939-1.721 2.641-3.238l.708.709zm10.296 8.884-12-12 .708-.708 12 12-.708.708z"/> 
+                                    <label for="password" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Password</label>
+                                    <div className="relative w-full">
+                                        <div className="absolute inset-y-0 right-0 flex items-center px-2">
+                                            <label onClick={() => setShow(!show)} className="hover:bg-gray-200 rounded px-2 py-1 text-sm text-gray-600 font-mono cursor-pointer js-password-label" for="toggle">
+                                                {show ?
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="black" className="bi bi-eye-slash" viewBox="0 0 16 16">
+                                                        <path d="M13.359 11.238C15.06 9.72 16 8 16 8s-3-5.5-8-5.5a7.028 7.028 0 0 0-2.79.588l.77.771A5.944 5.944 0 0 1 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13.134 13.134 0 0 1 14.828 8c-.058.087-.122.183-.195.288-.335.48-.83 1.12-1.465 1.755-.165.165-.337.328-.517.486l.708.709z" /> <path d="M11.297 9.176a3.5 3.5 0 0 0-4.474-4.474l.823.823a2.5 2.5 0 0 1 2.829 2.829l.822.822zm-2.943 1.299.822.822a3.5 3.5 0 0 1-4.474-4.474l.823.823a2.5 2.5 0 0 0 2.829 2.829z" /> <path d="M3.35 5.47c-.18.16-.353.322-.518.487A13.134 13.134 0 0 0 1.172 8l.195.288c.335.48.83 1.12 1.465 1.755C4.121 11.332 5.881 12.5 8 12.5c.716 0 1.39-.133 2.02-.36l.77.772A7.029 7.029 0 0 1 8 13.5C3 13.5 0 8 0 8s.939-1.721 2.641-3.238l.708.709zm10.296 8.884-12-12 .708-.708 12 12-.708.708z" />
                                                     </svg>
                                                     :
-                                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="black" class="bi bi-eye" viewBox="0 0 16 16"> 
-                                                        <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8zM1.173 8a13.133 13.133 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13.133 13.133 0 0 1 14.828 8c-.058.087-.122.183-.195.288-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5c-2.12 0-3.879-1.168-5.168-2.457A13.134 13.134 0 0 1 1.172 8z"/> <path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5zM4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0z"/> 
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="black" className="bi bi-eye" viewBox="0 0 16 16">
+                                                        <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8zM1.173 8a13.133 13.133 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13.133 13.133 0 0 1 14.828 8c-.058.087-.122.183-.195.288-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5c-2.12 0-3.879-1.168-5.168-2.457A13.134 13.134 0 0 1 1.172 8z" /> <path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5zM4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0z" />
                                                     </svg>
                                                 }
                                             </label>
                                         </div>
-                                        <input ref={(i)=>password=i} type={show?"text":"password"} name="password" id="password" placeholder="••••••••" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required="" />
+                                        <input ref={(i) => password = i} type={show ? "text" : "password"} name="password" id="password" placeholder="••••••••" className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-[#0C7075] focus:border-[#0C7075] block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-[#1e969c] dark:focus:border-[#21aab1]" required="" />
                                     </div>
                                 </div>
-                                <div class="flex items-center justify-between">
-                                    <div class="flex items-start">
-                                        <div class="flex items-center h-5">
-                                            <input id="remember" aria-describedby="remember" type="checkbox" class="checkbox checkbox-primary w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-primary-600 dark:ring-offset-gray-800" required="" />
+                                <div className="flex items-center justify-between">
+                                    <div className="flex items-start">
+                                        <div className="flex items-center h-5">
+                                            <input id="remember" aria-describedby="remember" type="checkbox" className="checkbox w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-[#13c6cf] dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-[#0C7075] dark:ring-offset-gray-800" required="" />
                                         </div>
-                                        <div class="ml-3 text-sm">
-                                            <label for="remember" class="text-gray-500 dark:text-gray-300">Remember me</label>
+                                        <div className="ml-3 text-sm">
+                                            <label for="remember" className="text-gray-500 dark:text-gray-300">Remember me</label>
                                         </div>
                                     </div>
-                                    <Link to="/forgetPassword" class="text-sm font-medium text-primary-600 hover:underline dark:text-primary-500">Forgot password?</Link>
+                                    <Link to="/forgetPassword" className="text-sm font-medium text-[#0C7075] hover:underline dark:text-[#30999e]">Forgot password?</Link>
                                 </div>
-                                <button onClick={onLogin} type="submit" class="w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">Sign in</button>
-                                <p class="text-sm font-light text-gray-500 dark:text-gray-400">
-                                    Don’t have an account yet? <Link to="/register" class="font-medium text-primary-600 hover:underline dark:text-primary-500">Sign up</Link>
+                                <button onClick={onLogin} type="submit" className="w-full text-white bg-[#0C7075] hover:bg-[#1a8d91] focus:ring-4 focus:outline-none focus:ring-[#109fa7] font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-[#0C7075] dark:hover:bg-[#0a3c3f] dark:focus:ring-bg-[#109fa7]">Sign in</button>
+                                <p className="text-sm font-light text-gray-500 dark:text-gray-400">
+                                    Don’t have an account yet? <Link to="/register" className="font-medium text-[#0C7075] hover:underline dark:text-[#249096]">Sign up</Link>
                                 </p>
                             </div>
                         </div>

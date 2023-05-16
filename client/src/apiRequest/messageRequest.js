@@ -5,7 +5,7 @@ import { getToken, getUserDetails } from "../helper/sessionHelper";
 import { setAllMessages, setNewArrivalMessage, setNewMessage, setSingleMessage } from "../redux/state/chatSlice";
 import { useSelector } from "react-redux";
 import { socket } from "../components/ChatBox";
-const BaseURL = "http://localhost:8100/api"
+const BaseURL = "https://instachat-api.onrender.com/api"
 const AxiosHeader = { headers: { "token": getToken() } }
 
 export const sentMessageRequest = async (content, chatId) =>{

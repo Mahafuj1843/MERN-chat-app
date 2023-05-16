@@ -8,49 +8,57 @@ import ChatUserSearch from '../components/drawer/ChatUserSearch'
 import GrpUserSearch from '../components/drawer/GrpUserSearch'
 import GroupInfo from '../components/drawer/GroupInfo'
 
-const drawer = (state, action) =>{
-    switch(action.type){
-      case 'SHOW':
-        return {show: true};
-      case 'HIDE':
-        return {show: false};
-      case 'SHOWGUS':
-        return {showGUS: true};
-      case 'HIDEGUS':
-        return {showGUS: false};
-      case 'SHOWGI':
-        return {showGI: true};
-      case 'HIDEGI':
-        return {showGI: false};
-      default:
-        return state;
-    }
+const drawer = (state, action) => {
+  switch (action.type) {
+    case 'SHOW':
+      return { show: true };
+    case 'HIDE':
+      return { show: false };
+    case 'SHOWGUS':
+      return { showGUS: true };
+    case 'HIDEGUS':
+      return { showGUS: false };
+    case 'SHOWGI':
+      return { showGI: true };
+    case 'HIDEGI':
+      return { showGI: false };
+    default:
+      return state;
   }
+}
 
 const ChatPage = () => {
-    const [state, dispatch] = useReducer(drawer, { show: false, showGUS: false , showGI: false})
-    const myChats = useSelector((state)=>state.chat.myChats)
-    const newMsg = useSelector((state) => state.chat.newMessage)
-    const allMessages = useSelector((state)=>state.chat.allMessages)
+  const [state, dispatch] = useReducer(drawer, { show: false, showGUS: false, showGI: false })
+  const myChats = useSelector((state) => state.chat.myChats)
+  const newMsg = useSelector((state) => state.chat.newMessage)
+  const allMessages = useSelector((state) => state.chat.allMessages)
+  const selectUser = useSelector((state) => state.chat.selectUser)
 
-    useEffect(()=>{
-      myChatRequest()
-    }, [newMsg, allMessages])
+  useEffect(() => {
+    myChatRequest()
+  }, [newMsg, allMessages])
 
-    return (
-        <Fragment className='relative h-screen'>
-            <ChatUserSearch state={state} dispatch={dispatch}/>
-            <GrpUserSearch state={state} dispatch={dispatch}/>
-            <GroupInfo state={state} dispatch={dispatch}/>
-            <Header />
-            <div className="bg-white flex items-center justify-center h-screen overflow-y-hidden" style={{height: "90vh"}}>
-                <div class="flex h-full w-full overflow-y-hidden">
-                    <MyChat myChats={myChats} dispatch={dispatch}/>
-                    <ChatBox dispatch={dispatch} />
-                </div>
+  return (
+    <Fragment className='relative h-screen'>
+      <ChatUserSearch state={state} dispatch={dispatch} />
+      <GrpUserSearch state={state} dispatch={dispatch} />
+      <GroupInfo state={state} dispatch={dispatch} />
+      <Header />
+      <div className="w-full h-[89.5vh] overflow-hidden">
+        <div className="flex justify-start items-center bg-white w-full h-full">
+          <div className={`${selectUser && 'hidden lg:block'} bg-white w-full lg:w-1/3 h-full`}>
+            <MyChat myChats={myChats} dispatch={dispatch} />
+          </div>
+          {
+            selectUser &&
+            <div className="bg-[#222f35] w-full lg:w-2/3 h-full">
+              <ChatBox dispatch={dispatch} />
             </div>
-        </Fragment>
-    )
-}////h-[89vh] xl:h-[90vh]
+          }
+        </div>
+      </div>
+    </Fragment>
+  )
+}
 
 export default ChatPage

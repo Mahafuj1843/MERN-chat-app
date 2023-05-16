@@ -84,13 +84,13 @@ const GroupInfo = ({ state, dispatch }) => {
 
   return (
     <Fragment >
-      <aside class="fixed h-full w-full z-50 left-0 top-0 transition duration-300 ease-in-out" style={{ display: showGI ? 'block' : 'none' }}>
-        <div onClick={() => dispatch({ type: 'HIDEGI' })} class="fixed h-full w-full left-0 top-0 bg-black bg-opacity-50 z-[-1]"></div>
+      <aside className="fixed h-full w-full z-50 left-0 top-0 transition duration-300 ease-in-out" style={{ display: showGI ? 'block' : 'none' }}>
+        <div onClick={() => dispatch({ type: 'HIDEGI' })} className="fixed h-full w-full left-0 top-0 bg-black bg-opacity-50 z-[-1]"></div>
         {
           selectUser?.users?.length > 0 &&
-          <div class="fixed h-full w-5/6 md:w-3/6 lg:w-2/6 xl:w-1/4 right-0 top-0 bg-white shadow-lg pt-8 transition duration-700 ease-in-out" style={{ right: showGI ? '0%' : '100%' }}>
+          <div className="fixed h-full w-5/6 md:w-3/6 lg:w-2/6 xl:w-1/4 right-0 top-0 bg-white shadow-lg pt-8 transition duration-700 ease-in-out" style={{ right: showGI ? '0%' : '100%' }}>
             <div className='px-3 md:px-5 flex justify-between item-center'>
-              <h2 class="text-lg font-medium text-gray-800 dark:text-white">Info</h2 >
+              <h2 className="text-lg font-medium text-gray-800 dark:text-white">Info</h2 >
               {
                 selectUser?.groupAdmin?._id === getUserDetails()._id &&
                 <div className="dropdown dropdown-end cursor-pointer">
@@ -110,19 +110,19 @@ const GroupInfo = ({ state, dispatch }) => {
               }
             </div>
             <div className='flex flex-col h-full text-center space-y-2'>
-              <div class="w-full relative flex item-center justify-center">
-                <div class="relative">
-                  <img class={`${selectUser.isGroupChat && 'bg-gray-300'} object-cover w-24 h-24 rounded-full`}
+              <div className="w-full relative flex item-center justify-center">
+                <div className="relative">
+                  <img className={`${selectUser.isGroupChat && 'bg-gray-300'} object-cover w-24 h-24 rounded-full`}
                     src={`${selectUser.isGroupChat ?
                       "https://cdn4.iconfinder.com/data/icons/internet-and-social-networking/32/i22_internet-512.png"
                       :
-                      "https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=faceare&facepad=3&w=688&h=688&q=100"
+                      getSender(selectUser.users, getUserDetails()).photo
                       }`} 
                   alt="Chat image" />
                   {
                     selectUser && getOnline(selectUser, onlineUsers, getUserDetails())
                     &&
-                    <span class="h-4 w-4 rounded-full bg-emerald-500 absolute right-1 ring-2 ring-white bottom-1"></span>
+                    <span className="h-4 w-4 rounded-full bg-emerald-500 absolute right-1 ring-2 ring-white bottom-1"></span>
                   }
                 </div>
               </div>
@@ -138,10 +138,10 @@ const GroupInfo = ({ state, dispatch }) => {
                 }
               </div>
               {selectUser?.isGroupChat &&
-                <div className='flex flex-col gap-2 h-2/3'>
+                <div className='flex flex-col gap-2 max-[400px]:h-2/3 sm:h-3/4 md:h-3/4 lg:h-3/5 xl:h-2/3'>
                   <div className='w-full px-3 md:px-5 flex justify-between'>
                     <span className='text-sm'>{selectUser.users.length} participants</span>
-                    <svg viewBox="0 0 24 24" width="24" height="24" class="">
+                    <svg viewBox="0 0 24 24" width="24" height="24" className="">
                       <path fill="text-gary-700"
                         d="M15.9 14.3H15l-.3-.3c1-1.1 1.6-2.7 1.6-4.3 0-3.7-3-6.7-6.7-6.7S3 6 3 9.7s3 6.7 6.7 6.7c1.6 0 3.2-.6 4.3-1.6l.3.3v.8l5.1 5.1 1.5-1.5-5-5.2zm-6.2 0c-2.6 0-4.6-2.1-4.6-4.6s2.1-4.6 4.6-4.6 4.6 2.1 4.6 4.6-2 4.6-4.6 4.6z">
                       </path>
@@ -149,28 +149,28 @@ const GroupInfo = ({ state, dispatch }) => {
                   </div>
                   {
                     selectUser.users &&
-                    <div class="mt-3 space-y-1 h-full overflow-y-auto z-50">
+                    <div className="mt-3 space-y-1 h-full overflow-y-auto z-50">
                       {
                         selectUser.users?.map((user, i) => {
                           return (
-                            <div key={i} class="flex items-center w-full px-3 md:px-5 py-2 transition-colors duration-200 dark:hover:bg-gray-800 gap-x-1 md:gap-x-2 hover:bg-gray-100 focus:outline-none">
-                              <div class="relative w-14">
-                                <img class="object-cover w-10 md:w-11 h-10 md:h-11 rounded-full" src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=880&h=880&q=80" alt="" />
+                            <div key={i} className="flex items-center w-full px-3 md:px-5 py-2 transition-colors duration-200 dark:hover:bg-gray-800 gap-x-1 md:gap-x-2 hover:bg-gray-100 focus:outline-none">
+                              <div className="relative w-14">
+                                <img className="object-cover w-10 md:w-11 h-10 md:h-11 rounded-full" src={user.photo} alt="User image" />
                                 {
                                   onlineUsers.find((u) => u.userId === user._id)
                                   &&
-                                  <span class="h-3 w-3 rounded-full bg-emerald-500 absolute right-0.5 ring-2 ring-white bottom-0"></span>
+                                  <span className="h-3 w-3 rounded-full bg-emerald-500 absolute right-0.5 ring-2 ring-white bottom-0"></span>
                                 }
                               </div>
                               <div className='w-full h-full flex justify-between item-center'>
-                                <div class="text-left rtl:text-right space-y-1 w-2/3 truncate">
-                                  <h1 class="text-sm font-semibold text-gray-700 truncate capitalize dark:text-white">{user.firstname + ' ' + user.lastname}</h1>
-                                  <p class="text-xs text-gray-500 dark:text-gray-400 truncate ">{user.email}</p>
+                                <div className="text-left rtl:text-right space-y-1 w-2/3 truncate">
+                                  <h1 className="text-sm font-semibold text-gray-700 truncate capitalize dark:text-white">{user.firstname + ' ' + user.lastname}</h1>
+                                  <p className="text-xs text-gray-500 dark:text-gray-400 truncate ">{user.email}</p>
                                 </div>
                                 {
                                   user._id === selectUser.groupAdmin._id
                                   &&
-                                  <span class="inline-flex items-center h-4 rounded-md bg-[#afd8da] px-1 md:px-2 py-1 text-xs font-medium text-[#0C7075] ring-1 ring-inset ring-[#2b9fa5]">Admin</span>
+                                  <span className="inline-flex items-center h-4 rounded-md bg-[#afd8da] px-1 md:px-2 py-1 text-xs font-medium text-[#0C7075] ring-1 ring-inset ring-[#2b9fa5]">Admin</span>
                                 }
                                 {
                                   user._id !== selectUser.groupAdmin._id && selectUser.groupAdmin._id === getUserDetails()._id &&
@@ -216,7 +216,7 @@ const GroupInfo = ({ state, dispatch }) => {
           <h3 className="text-lg font-bold">Change subject</h3>
           <div className='flex my-4 px-5 justify-center gap-3'>
             <div className='w-2/3'>
-              <input ref={(i) => grpName = i} defaultValue={selectUser?.chatName} type="text" name="grpName" id="grpName" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Group Name" required="" />
+              <input ref={(i) => grpName = i} defaultValue={selectUser?.chatName} type="text" name="grpName" id="grpName" className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Group Name" required="" />
             </div>
             <button onClick={onUpdate} className='flex gap-1 item-center bg-[#0C7075] rounded-md px-3 py-2'>
               {loading && <img className='w-6 h-6' src={logingIcon} alt="" srcset="" />}
@@ -233,30 +233,30 @@ const GroupInfo = ({ state, dispatch }) => {
           <label onClick={() => setShow(!show)} htmlFor="my-modal-AddP" className="btn btn-sm btn-circle absolute right-2 top-2">✕</label>
           <h3 className="absolute left-4 top-3 text-lg font-bold pb-4">Add participant</h3>
           <div className='mt-8 mx-0 md:mx-4'>
-            <div class="flex space-x-1 md:space-x-2 items-center px-1 md:px-4 pb-2">
-              <div class="flex-grow h-10 flex items-center space-x-2 bg-gray-200 py-1 px-4 rounded-md">
-                <svg viewBox="0 0 24 24" width="32" height="32" class="cursor-pointer">
+            <div className="flex space-x-1 md:space-x-2 items-center px-1 md:px-4 pb-2">
+              <div className="flex-grow h-10 flex items-center space-x-2 bg-gray-200 py-1 px-4 rounded-md">
+                <svg viewBox="0 0 24 24" width="32" height="32" className="cursor-pointer">
                   <path fill="text-gray-700"
                     d="M15.009 13.805h-.636l-.22-.219a5.184 5.184 0 0 0 1.256-3.386 5.207 5.207 0 1 0-5.207 5.208 5.183 5.183 0 0 0 3.385-1.255l.221.22v.635l4.004 3.999 1.194-1.195-3.997-4.007zm-4.808 0a3.605 3.605 0 1 1 0-7.21 3.605 3.605 0 0 1 0 7.21z">
                   </path>
                 </svg>
-                <input onChange={onSearch} type="search" ref={(i) => search = i} class="focus:outline-none bg-gray-200 w-full text-gray-500 text-md"
+                <input onChange={onSearch} type="search" ref={(i) => search = i} className="focus:outline-none bg-gray-200 w-full text-gray-500 text-md"
                   placeholder="Search..." />
               </div>
             </div>
-            <div class="mt-2 mx-5 flex gap-2 h-fit border-y overflow-x-auto">
+            <div className="mt-2 mx-5 flex gap-2 h-fit border-y overflow-x-auto">
               {
                 selectForGrp?.map((user, i) => {
                   return (
-                    <button onClick={onAddtoGrp.bind(this, user)} class="flex flex-col w-fit py-2 transition-colors duration-200 dark:hover:bg-gray-800 gap-x-2 focus:outline-none">
-                      <div class="relative px-1">
-                        <img class="object-cover w-11 h-11 rounded-full" src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=faceare&facepad=3&w=688&h=688&q=100" alt="" />
-                        <span class="h-4 w-4 flex item-center justify-center rounded-full bg-gray-500 absolute right-0.5 ring-1 ring-white bottom-0">
+                    <button key={i} onClick={onAddtoGrp.bind(this, user)} className="flex flex-col w-fit py-2 transition-colors duration-200 dark:hover:bg-gray-800 gap-x-2 focus:outline-none">
+                      <div className="relative px-1">
+                        <img className="object-cover w-11 h-11 rounded-full" src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=faceare&facepad=3&w=688&h=688&q=100" alt="" />
+                        <span className="h-4 w-4 flex item-center justify-center rounded-full bg-gray-500 absolute right-0.5 ring-1 ring-white bottom-0">
                           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" id="close"><path fill="white" d="M7 18a1 1 0 0 1-.707-1.707l10-10a1 1 0 0 1 1.414 1.414l-10 10A.997.997 0 0 1 7 18Z"></path><path fill="white" d="M17 18a.997.997 0 0 1-.707-.293l-10-10a1 1 0 0 1 1.414-1.414l10 10A1 1 0 0 1 17 18Z"></path></svg>
                         </span>
                       </div>
-                      <div class="text-left rtl:text-right w-14">
-                        <p class="text-sm truncate text-gray-700 capitalize dark:text-white">{user.firstname + " " + user.lastname}</p>
+                      <div className="text-left rtl:text-right w-14">
+                        <p className="text-sm truncate text-gray-700 capitalize dark:text-white">{user.firstname + " " + user.lastname}</p>
                       </div>
                     </button>
                   )
@@ -264,34 +264,34 @@ const GroupInfo = ({ state, dispatch }) => {
               }
             </div>
             {loading ?
-              <div className='flex items-center bg-gray-200 justify-center w-full px-5 py-2'>
+              <div classNameName='flex items-center bg-gray-200 justify-center w-full px-5 py-2'>
                 <img src={logingIcon} className='h-10 w-10' alt="" srcset="" />
               </div>
               :
-              (<div class="mt-3 mx-1 md:mx-5 space-y-1 h-64 overflow-y-auto">
+              (<div className="mt-3 mx-1 md:mx-5 space-y-1 h-64 overflow-y-auto">
                 {
                   searchUsers?.map((user, i) => {
                     return (
                       selectUser?.users?.find((u) => u._id === user._id) ?
                         (
-                          <button key={i} disabled class="flex items-center w-full px-1 md:px-5 py-2 transition-colors duration-200 bg-gray-100 dark:bg-gray-800 gap-x-2 focus:outline-none">
-                            <div class="relative px-1">
-                              <img class="object-cover w-11 h-11 rounded-full" src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=faceare&facepad=3&w=688&h=688&q=100" alt="" />
-                              <span class="h-4 w-4 flex item-center justify-center rounded-full bg-gray-500 absolute right-0.5 ring-1 ring-white bottom-0">
+                          <button key={i} disabled className="flex items-center w-full px-1 md:px-5 py-2 transition-colors duration-200 bg-gray-100 dark:bg-gray-800 gap-x-2 focus:outline-none">
+                            <div className="relative px-1">
+                              <img className="object-cover w-11 h-11 rounded-full" src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=faceare&facepad=3&w=688&h=688&q=100" alt="" />
+                              <span className="h-4 w-4 flex item-center justify-center rounded-full bg-gray-500 absolute right-0.5 ring-1 ring-white bottom-0">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" id="done"><path fill="none" d="M0 0h24v24H0V0z"></path><path fill="white" d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"></path></svg>
                               </span>
                             </div>
-                            <div class="text-left rtl:text-right space-y-1">
-                              <h1 class="text-sm font-medium text-gray-700 capitalize dark:text-white">{user.firstname + " " + user.lastname}</h1>
+                            <div className="text-left rtl:text-right space-y-1">
+                              <h1 className="text-sm font-medium text-gray-700 capitalize dark:text-white">{user.firstname + " " + user.lastname}</h1>
 
-                              <p class="text-xs text-gray-500 dark:text-gray-400">Already member of the group.</p>
+                              <p className="text-xs text-gray-500 dark:text-gray-400">Already member of the group.</p>
                             </div>
                           </button>
                         ) : (
-                          <button key={i} onClick={onAddtoGrp.bind(this, user)} class="flex items-center w-full px-1 md:px-5 py-2 transition-colors duration-200 bg-gray-100 dark:bg-gray-800 gap-x-2 focus:outline-none">
-                            <div class="relative px-1">
-                              <img class="object-cover w-11 h-11 rounded-full" src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=faceare&facepad=3&w=688&h=688&q=100" alt="" />
-                              <span class={`${selectForGrp.find((u) => u._id === user._id) ? 'h-4 w-4 bg-gray-600 right-0.5 ring-1 ring-white bottom-0' : onlineUsers.find((u) => u.userId === user._id) ? 'h-3 w-3 bg-emerald-500 right-0.5 ring-1 ring-white bottom-0' : 'hidden'} flex item-center justify-center rounded-full absolute right-0.5 ring-1 ring-white bottom-0`}>
+                          <button key={i} onClick={onAddtoGrp.bind(this, user)} className="flex items-center w-full px-1 md:px-5 py-2 transition-colors duration-200 bg-gray-100 dark:bg-gray-800 gap-x-2 focus:outline-none">
+                            <div className="relative px-1">
+                              <img className="object-cover w-11 h-11 rounded-full" src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=faceare&facepad=3&w=688&h=688&q=100" alt="" />
+                              <span className={`${selectForGrp.find((u) => u._id === user._id) ? 'h-4 w-4 bg-gray-600 right-0.5 ring-1 ring-white bottom-0' : onlineUsers.find((u) => u.userId === user._id) ? 'h-3 w-3 bg-emerald-500 right-0.5 ring-1 ring-white bottom-0' : 'hidden'} flex item-center justify-center rounded-full absolute right-0.5 ring-1 ring-white bottom-0`}>
                                 {
                                   selectForGrp.some((u) => u._id === user._id) ?
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" id="done"><path fill="none" d="M0 0h24v24H0V0z"></path><path fill="white" d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"></path></svg>
@@ -300,86 +300,16 @@ const GroupInfo = ({ state, dispatch }) => {
                                 }
                               </span>
                             </div>
-                            <div class="text-left rtl:text-right space-y-1">
-                              <h1 class="text-sm font-medium text-gray-700 capitalize dark:text-white">{user.firstname + " " + user.lastname}</h1>
+                            <div className="text-left rtl:text-right space-y-1">
+                              <h1 className="text-sm font-medium text-gray-700 capitalize dark:text-white">{user.firstname + " " + user.lastname}</h1>
 
-                              <p class="text-xs text-gray-500 dark:text-gray-400">{user.email}</p>
+                              <p className="text-xs text-gray-500 dark:text-gray-400">{user.email}</p>
                             </div>
                           </button>
                         )
                     )
                   })
                 }
-                {/* <button class="flex items-center w-full px-5 py-2 transition-colors duration-200 dark:hover:bg-gray-800 gap-x-2 hover:bg-gray-100 focus:outline-none">
-                <img class="object-cover w-11 h-11 rounded-full" src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=880&h=880&q=80" alt="" />
-
-                <div class="text-left rtl:text-right space-y-1">
-                  <h1 class="text-sm font-medium text-gray-700 capitalize dark:text-white">arthur melo</h1>
-
-                  <p class="text-xs text-gray-500 dark:text-gray-400">1.2 Followers</p>
-                </div>
-              </button>
-              <button class="flex items-center w-full px-5 py-2 transition-colors duration-200 dark:hover:bg-gray-800 gap-x-2 hover:bg-gray-100 focus:outline-none">
-                <img class="object-cover w-11 h-11 rounded-full" src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=880&h=880&q=80" alt="" />
-
-                <div class="text-left rtl:text-right space-y-1">
-                  <h1 class="text-sm font-medium text-gray-700 capitalize dark:text-white">arthur melo</h1>
-
-                  <p class="text-xs text-gray-500 dark:text-gray-400">1.2 Followers</p>
-                </div>
-              </button>
-              <button class="flex items-center w-full px-5 py-2 transition-colors duration-200 bg-gray-100 dark:bg-gray-800 gap-x-2 focus:outline-none">
-                <div class="relative px-1">
-                  <img class="object-cover w-11 h-11 rounded-full" src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=faceare&facepad=3&w=688&h=688&q=100" alt="" />
-                  <span class="h-4 w-4 flex item-center justify-center rounded-full bg-emerald-500 absolute right-0.5 ring-1 ring-white bottom-0">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" id="done"><path fill="none" d="M0 0h24v24H0V0z"></path><path fill="white" d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"></path></svg>
-                  </span>
-                </div>
-                <div class="text-left rtl:text-right space-y-1">
-                  <h1 class="text-sm font-medium text-gray-700 capitalize dark:text-white">Jane Doe</h1>
-
-                  <p class="text-xs text-gray-500 dark:text-gray-400">15.6 Followers</p>
-                </div>
-              </button>
-              <button class="flex items-center w-full px-5 py-2 transition-colors duration-200 bg-gray-100 dark:bg-gray-800 gap-x-2 focus:outline-none">
-                <div class="relative px-1">
-                  <img class="object-cover w-11 h-11 rounded-full" src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=faceare&facepad=3&w=688&h=688&q=100" alt="" />
-                  <span class="h-4 w-4 flex item-center justify-center rounded-full bg-emerald-500 absolute right-0.5 ring-1 ring-white bottom-0">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" id="done"><path fill="none" d="M0 0h24v24H0V0z"></path><path fill="white" d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"></path></svg>
-                  </span>
-                </div>
-                <div class="text-left rtl:text-right space-y-1">
-                  <h1 class="text-sm font-medium text-gray-700 capitalize dark:text-white">Jane Doe</h1>
-
-                  <p class="text-xs text-gray-500 dark:text-gray-400">15.6 Followers</p>
-                </div>
-              </button>
-              <button class="flex items-center w-full px-5 py-2 transition-colors duration-200 bg-gray-100 dark:bg-gray-800 gap-x-2 focus:outline-none">
-                <div class="relative px-1">
-                  <img class="object-cover w-11 h-11 rounded-full" src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=faceare&facepad=3&w=688&h=688&q=100" alt="" />
-                  <span class="h-4 w-4 flex item-center justify-center rounded-full bg-emerald-500 absolute right-0.5 ring-1 ring-white bottom-0">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" id="done"><path fill="none" d="M0 0h24v24H0V0z"></path><path fill="white" d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"></path></svg>
-                  </span>
-                </div>
-                <div class="text-left rtl:text-right space-y-1">
-                  <h1 class="text-sm font-medium text-gray-700 capitalize dark:text-white">Jane Doe</h1>
-
-                  <p class="text-xs text-gray-500 dark:text-gray-400">15.6 Followers</p>
-                </div>
-              </button>
-              <button class="flex items-center w-full px-5 py-2 transition-colors duration-200 bg-gray-100 dark:bg-gray-800 gap-x-2 focus:outline-none">
-                <div class="relative px-1">
-                  <img class="object-cover w-11 h-11 rounded-full" src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=faceare&facepad=3&w=688&h=688&q=100" alt="" />
-                  <span class="h-4 w-4 flex item-center justify-center rounded-full bg-emerald-500 absolute right-0.5 ring-1 ring-white bottom-0">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" id="done"><path fill="none" d="M0 0h24v24H0V0z"></path><path fill="white" d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"></path></svg>
-                  </span>
-                </div>
-                <div class="text-left rtl:text-right space-y-1">
-                  <h1 class="text-sm font-medium text-gray-700 capitalize dark:text-white">Jane Doe</h1>
-
-                  <p class="text-xs text-gray-500 dark:text-gray-400">15.6 Followers</p>
-                </div>
-              </button> */}
               </div>)
             }
           </div>
