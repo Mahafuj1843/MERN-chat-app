@@ -9,9 +9,10 @@ module.exports = {
       }
     },
     screens:{
+      'xs':'380px',
       sm:"480px",
       md:"768px",
-      lg:"1024px",
+      lg:"1023px",
       xl:"1280px",
     },
     fontFamily:{

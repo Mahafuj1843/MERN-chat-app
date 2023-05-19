@@ -7,7 +7,7 @@ import { ErrorToast, IsEmpty } from '../../helper/formHelper'
 import { addToGroupRequest, removeFromGroupRequest, renameGroupRequest } from '../../apiRequest/chatRequset'
 import { searchUserRequest } from '../../apiRequest/authRequest'
 import store from '../../redux/store/store'
-import { removeSelectForGrp, setEmpty, setSelectForGrp, setsearchUsers } from '../../redux/state/chatSlice'
+import { removeSelectForGrp, setEmpty, setSelectForGrp } from '../../redux/state/chatSlice'
 import { useEffect } from 'react'
 import { DeleteAlert } from '../../helper/alert'
 import { getOnline, getSender } from '../../helper/logic'
@@ -81,16 +81,16 @@ const GroupInfo = ({ state, dispatch }) => {
       await removeFromGroupRequest(selectUser._id, user)
     }
   }
-
+  
   return (
     <Fragment >
-      <aside className="fixed h-full w-full z-50 left-0 top-0 transition duration-300 ease-in-out" style={{ display: showGI ? 'block' : 'none' }}>
+      <aside className="fixed h-screen w-full z-50 left-0 top-0 transition duration-300 ease-in-out" style={{ display: showGI ? 'block' : 'none' }}>
         <div onClick={() => dispatch({ type: 'HIDEGI' })} className="fixed h-full w-full left-0 top-0 bg-black bg-opacity-50 z-[-1]"></div>
         {
           selectUser?.users?.length > 0 &&
-          <div className="fixed h-full w-5/6 md:w-3/6 lg:w-2/6 xl:w-1/4 right-0 top-0 bg-white shadow-lg pt-8 transition duration-700 ease-in-out" style={{ right: showGI ? '0%' : '100%' }}>
+          <div className="fixed h-full w-5/6 md:w-3/6 lg:w-2/6 xl:w-1/4 right-0 top-0 bg-white shadow-lg pt-8 pb-4 transition duration-700 ease-in-out" style={{ right: showGI ? '0%' : '100%' }}>
             <div className='px-3 md:px-5 flex justify-between item-center'>
-              <h2 className="text-lg font-medium text-gray-800 dark:text-white">Info</h2 >
+              <h2 className="text-lg font-medium text-gray-800">Info</h2 >
               {
                 selectUser?.groupAdmin?._id === getUserDetails()._id &&
                 <div className="dropdown dropdown-end cursor-pointer">
@@ -114,11 +114,11 @@ const GroupInfo = ({ state, dispatch }) => {
                 <div className="relative">
                   <img className={`${selectUser.isGroupChat && 'bg-gray-300'} object-cover w-24 h-24 rounded-full`}
                     src={`${selectUser.isGroupChat ?
-                      "https://cdn4.iconfinder.com/data/icons/internet-and-social-networking/32/i22_internet-512.png"
+                      selectUser.grpPhoto
                       :
                       getSender(selectUser.users, getUserDetails()).photo
                       }`} 
-                  alt="Chat image" />
+                  alt="Chat pic" />
                   {
                     selectUser && getOnline(selectUser, onlineUsers, getUserDetails())
                     &&
@@ -138,7 +138,7 @@ const GroupInfo = ({ state, dispatch }) => {
                 }
               </div>
               {selectUser?.isGroupChat &&
-                <div className='flex flex-col gap-2 max-[400px]:h-2/3 sm:h-3/4 md:h-3/4 lg:h-3/5 xl:h-2/3'>
+                <div className='flex flex-col gap-2 max-[389px]:h-[65%] max-[450px]:h-[75%] max-[820px]:h-[80%] max-[1024px]:h-[62%] xl:h-[65%]'>
                   <div className='w-full px-3 md:px-5 flex justify-between'>
                     <span className='text-sm'>{selectUser.users.length} participants</span>
                     <svg viewBox="0 0 24 24" width="24" height="24" className="">
@@ -153,9 +153,9 @@ const GroupInfo = ({ state, dispatch }) => {
                       {
                         selectUser.users?.map((user, i) => {
                           return (
-                            <div key={i} className="flex items-center w-full px-3 md:px-5 py-2 transition-colors duration-200 dark:hover:bg-gray-800 gap-x-1 md:gap-x-2 hover:bg-gray-100 focus:outline-none">
+                            <div key={i} className="flex items-center w-full px-3 md:px-5 py-2 transition-colors duration-200  gap-x-1 md:gap-x-2 hover:bg-gray-100 focus:outline-none">
                               <div className="relative w-14">
-                                <img className="object-cover w-10 md:w-11 h-10 md:h-11 rounded-full" src={user.photo} alt="User image" />
+                                <img className="object-cover w-10 md:w-11 h-10 md:h-11 rounded-full" src={user.photo} alt="User pic" />
                                 {
                                   onlineUsers.find((u) => u.userId === user._id)
                                   &&
@@ -164,8 +164,8 @@ const GroupInfo = ({ state, dispatch }) => {
                               </div>
                               <div className='w-full h-full flex justify-between item-center'>
                                 <div className="text-left rtl:text-right space-y-1 w-2/3 truncate">
-                                  <h1 className="text-sm font-semibold text-gray-700 truncate capitalize dark:text-white">{user.firstname + ' ' + user.lastname}</h1>
-                                  <p className="text-xs text-gray-500 dark:text-gray-400 truncate ">{user.email}</p>
+                                  <h1 className="text-sm font-semibold text-gray-700 truncate capitalize ">{user.firstname + ' ' + user.lastname}</h1>
+                                  <p className="text-xs text-gray-500  truncate ">{user.email}</p>
                                 </div>
                                 {
                                   user._id === selectUser.groupAdmin._id
@@ -214,11 +214,11 @@ const GroupInfo = ({ state, dispatch }) => {
         <div className="modal-box relative">
           <label htmlFor="my-modal-GrpRemane" className="btn btn-sm btn-circle absolute right-2 top-2">✕</label>
           <h3 className="text-lg font-bold">Change subject</h3>
-          <div className='flex my-4 px-5 justify-center gap-3'>
+          <div className='flex my-4 px-0 md:px-5 justify-center gap-3'>
             <div className='w-2/3'>
-              <input ref={(i) => grpName = i} defaultValue={selectUser?.chatName} type="text" name="grpName" id="grpName" className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Group Name" required="" />
+              <input ref={(i) => grpName = i} defaultValue={selectUser?.chatName} type="text" name="grpName" id="grpName" className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 " placeholder="Group Name" required="" />
             </div>
-            <button onClick={onUpdate} className='flex gap-1 item-center bg-[#0C7075] rounded-md px-3 py-2'>
+            <button onClick={onUpdate} className='flex gap-1 item-center bg-[#0C7075] text-white rounded-md px-3 py-2'>
               {loading && <img className='w-6 h-6' src={logingIcon} alt="" srcset="" />}
               Update
             </button>
@@ -248,15 +248,15 @@ const GroupInfo = ({ state, dispatch }) => {
               {
                 selectForGrp?.map((user, i) => {
                   return (
-                    <button key={i} onClick={onAddtoGrp.bind(this, user)} className="flex flex-col w-fit py-2 transition-colors duration-200 dark:hover:bg-gray-800 gap-x-2 focus:outline-none">
+                    <button key={i} onClick={onAddtoGrp.bind(this, user)} className="flex flex-col w-fit py-2 transition-colors duration-200  gap-x-2 focus:outline-none">
                       <div className="relative px-1">
-                        <img className="object-cover w-11 h-11 rounded-full" src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=faceare&facepad=3&w=688&h=688&q=100" alt="" />
+                        <img className="object-cover w-11 h-11 rounded-full" src={user.photo} alt="User pic" />
                         <span className="h-4 w-4 flex item-center justify-center rounded-full bg-gray-500 absolute right-0.5 ring-1 ring-white bottom-0">
                           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" id="close"><path fill="white" d="M7 18a1 1 0 0 1-.707-1.707l10-10a1 1 0 0 1 1.414 1.414l-10 10A.997.997 0 0 1 7 18Z"></path><path fill="white" d="M17 18a.997.997 0 0 1-.707-.293l-10-10a1 1 0 0 1 1.414-1.414l10 10A1 1 0 0 1 17 18Z"></path></svg>
                         </span>
                       </div>
                       <div className="text-left rtl:text-right w-14">
-                        <p className="text-sm truncate text-gray-700 capitalize dark:text-white">{user.firstname + " " + user.lastname}</p>
+                        <p className="text-sm truncate text-gray-700 capitalize ">{user.firstname + " " + user.lastname}</p>
                       </div>
                     </button>
                   )
@@ -274,23 +274,23 @@ const GroupInfo = ({ state, dispatch }) => {
                     return (
                       selectUser?.users?.find((u) => u._id === user._id) ?
                         (
-                          <button key={i} disabled className="flex items-center w-full px-1 md:px-5 py-2 transition-colors duration-200 bg-gray-100 dark:bg-gray-800 gap-x-2 focus:outline-none">
+                          <button key={i} disabled className="flex items-center w-full px-1 md:px-5 py-2 transition-colors duration-200 bg-gray-100  gap-x-2 focus:outline-none">
                             <div className="relative px-1">
-                              <img className="object-cover w-11 h-11 rounded-full" src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=faceare&facepad=3&w=688&h=688&q=100" alt="" />
+                              <img className="object-cover w-11 h-11 rounded-full" src={user.photo} alt="User pic" />
                               <span className="h-4 w-4 flex item-center justify-center rounded-full bg-gray-500 absolute right-0.5 ring-1 ring-white bottom-0">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" id="done"><path fill="none" d="M0 0h24v24H0V0z"></path><path fill="white" d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"></path></svg>
                               </span>
                             </div>
                             <div className="text-left rtl:text-right space-y-1">
-                              <h1 className="text-sm font-medium text-gray-700 capitalize dark:text-white">{user.firstname + " " + user.lastname}</h1>
+                              <h1 className="text-sm font-medium text-gray-700 capitalize ">{user.firstname + " " + user.lastname}</h1>
 
-                              <p className="text-xs text-gray-500 dark:text-gray-400">Already member of the group.</p>
+                              <p className="text-xs text-gray-500 ">Already member of the group.</p>
                             </div>
                           </button>
                         ) : (
-                          <button key={i} onClick={onAddtoGrp.bind(this, user)} className="flex items-center w-full px-1 md:px-5 py-2 transition-colors duration-200 bg-gray-100 dark:bg-gray-800 gap-x-2 focus:outline-none">
+                          <button key={i} onClick={onAddtoGrp.bind(this, user)} className="flex items-center w-full px-1 md:px-5 py-2 transition-colors duration-200 bg-gray-100  gap-x-2 focus:outline-none">
                             <div className="relative px-1">
-                              <img className="object-cover w-11 h-11 rounded-full" src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=faceare&facepad=3&w=688&h=688&q=100" alt="" />
+                              <img className="object-cover w-11 h-11 rounded-full" src={user.photo} alt="User pic" />
                               <span className={`${selectForGrp.find((u) => u._id === user._id) ? 'h-4 w-4 bg-gray-600 right-0.5 ring-1 ring-white bottom-0' : onlineUsers.find((u) => u.userId === user._id) ? 'h-3 w-3 bg-emerald-500 right-0.5 ring-1 ring-white bottom-0' : 'hidden'} flex item-center justify-center rounded-full absolute right-0.5 ring-1 ring-white bottom-0`}>
                                 {
                                   selectForGrp.some((u) => u._id === user._id) ?
@@ -301,9 +301,9 @@ const GroupInfo = ({ state, dispatch }) => {
                               </span>
                             </div>
                             <div className="text-left rtl:text-right space-y-1">
-                              <h1 className="text-sm font-medium text-gray-700 capitalize dark:text-white">{user.firstname + " " + user.lastname}</h1>
+                              <h1 className="text-sm font-medium text-gray-700 capitalize ">{user.firstname + " " + user.lastname}</h1>
 
-                              <p className="text-xs text-gray-500 dark:text-gray-400">{user.email}</p>
+                              <p className="text-xs text-gray-500 ">{user.email}</p>
                             </div>
                           </button>
                         )

@@ -1,4 +1,4 @@
-import React, {Fragment, useReducer} from 'react';
+import React, {Fragment} from 'react';
 import { useSelector } from 'react-redux';
 
 const FullScreenLoader = () => {

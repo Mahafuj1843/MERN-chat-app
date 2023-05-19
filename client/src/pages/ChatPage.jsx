@@ -1,6 +1,6 @@
 import React, { Fragment, useEffect, useReducer } from 'react'
 import MyChat from '../components/MyChat'
-import ChatBox from '../components/ChatBox'
+import ChatBox  from '../components/ChatBox'
 import Header from '../components/Header'
 import { myChatRequest } from '../apiRequest/chatRequset'
 import { useSelector } from 'react-redux'
@@ -46,15 +46,12 @@ const ChatPage = () => {
       <Header />
       <div className="w-full h-[89.5vh] overflow-hidden">
         <div className="flex justify-start items-center bg-white w-full h-full">
-          <div className={`${selectUser && 'hidden lg:block'} bg-white w-full lg:w-1/3 h-full`}>
-            <MyChat myChats={myChats} dispatch={dispatch} />
+          <div className={`${selectUser ? 'hidden lg:block' : 'block'} bg-white w-full lg:w-1/3 h-full`}>
+            <MyChat myChats={myChats} dispatch={dispatch}/>
           </div>
-          {
-            selectUser &&
-            <div className="bg-[#222f35] w-full lg:w-2/3 h-full">
-              <ChatBox dispatch={dispatch} />
-            </div>
-          }
+          <div className={`${selectUser ? 'block' : 'hidden lg:block'} bg-white w-full lg:w-2/3 h-full`}>
+            <ChatBox dispatch={dispatch} />
+          </div>
         </div>
       </div>
     </Fragment>

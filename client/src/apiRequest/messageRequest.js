@@ -1,9 +1,8 @@
 import axios from "axios";
-import { ErrorToast, SuccessToast } from "../helper/formHelper";
+import { ErrorToast } from "../helper/formHelper";
 import store from "../redux/store/store";
-import { getToken, getUserDetails } from "../helper/sessionHelper";
-import { setAllMessages, setNewArrivalMessage, setNewMessage, setSingleMessage } from "../redux/state/chatSlice";
-import { useSelector } from "react-redux";
+import { getToken } from "../helper/sessionHelper";
+import { setAllMessages, setNewMessage, setSingleMessage } from "../redux/state/chatSlice";
 import { socket } from "../components/ChatBox";
 const BaseURL = "https://instachat-api.onrender.com/api"
 const AxiosHeader = { headers: { "token": getToken() } }

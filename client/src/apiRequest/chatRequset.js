@@ -1,10 +1,9 @@
 import axios from "axios";
-import { ErrorToast, SuccessToast } from "../helper/formHelper";
+import { ErrorToast  } from "../helper/formHelper";
 import { hideLoader, showLoader } from "../redux/state/settingSlice";
 import store from "../redux/store/store";
 import { getToken, getUserDetails } from "../helper/sessionHelper";
 import { setMyChats, setSelectUser } from "../redux/state/chatSlice";
-import { useSelector } from "react-redux";
 const BaseURL = "https://instachat-api.onrender.com/api"
 const AxiosHeader = { headers: { "token": getToken() } }
 
@@ -45,6 +44,8 @@ export const accessChatRequest = async (userId) =>{
             const myChats = store.getState().chat.myChats
             if(!myChats.find((c)=>c._id===res.data._id))
                 store.dispatch(setMyChats([res.data, ...myChats]))
+            else
+                store.dispatch(setSelectUser(res.data))
             return true;
         } else {
             ErrorToast("Something Went Wrong")

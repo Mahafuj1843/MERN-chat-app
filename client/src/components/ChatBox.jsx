@@ -6,15 +6,14 @@ import { useSelector } from 'react-redux'
 import { getUserDetails } from '../helper/sessionHelper'
 import MessageFetchingLoader from './loading/MessageFetchingLoader'
 import { fetchAllMessagesRequest, sentMessageRequest } from '../apiRequest/messageRequest'
-import io from "socket.io-client";
 import store from '../redux/store/store'
 import { setSelectUser, setSingleMessage } from '../redux/state/chatSlice'
-import { myChatRequest } from '../apiRequest/chatRequset'
-import { setNotification, setOnlineUsers } from '../redux/state/settingSlice'
 import { getOnline, getSender } from '../helper/logic'
+import io from "socket.io-client";
+import { setNotification, setOnlineUsers } from '../redux/state/settingSlice'
+import { myChatRequest } from '../apiRequest/chatRequset'
 
-
-const ENDPOINT = "https://instachat-api.onrender.com"//"http://localhost:8100"
+const ENDPOINT = "https://instachat-api.onrender.com"
 export var socket, selectedChatCompare
 
 const ChatBox = ({ dispatch }) => {
@@ -114,41 +113,53 @@ const ChatBox = ({ dispatch }) => {
     return (
         <Fragment>
             {
+                selectUser &&
                 <div className="flex flex-col bg-white overflow-hidden flex-grow h-[89.5vh]"
                     style={{ backgroundImage: BG }}>
                     <div className="flex justify-between bg-white px-2 lg:px-4 py-2 border-b-2">
                         <div className="flex flex-none space-x-1 md:space-x-3 items-center">
-                            <svg onClick={() => store.dispatch(setSelectUser(null))} className='p-1 rounded-full lg:hidden block' xmlns="http://www.w3.org/2000/svg" width="38" height="38" viewBox="0 0 24 24" id="back-arrow">
+                            <svg onClick={()=> store.dispatch(setSelectUser(null))} className='p-1 rounded-full lg:hidden block' xmlns="http://www.w3.org/2000/svg" width="38" height="38" viewBox="0 0 24 24" id="back-arrow">
                                 <path fill="none" d="M0 0h24v24H0V0z"></path>
                                 <path d="M19 11H7.83l4.88-4.88c.39-.39.39-1.03 0-1.42-.39-.39-1.02-.39-1.41 0l-6.59 6.59c-.39.39-.39 1.02 0 1.41l6.59 6.59c.39.39 1.02.39 1.41 0 .39-.39.39-1.02 0-1.41L7.83 13H19c.55 0 1-.45 1-1s-.45-1-1-1z"></path>
                             </svg>
                             <div className="relative">
                                 <img className={`${selectUser.isGroupChat && 'bg-gray-300'} object-cover w-12 h-12 rounded-full`}
                                     src={`${selectUser.isGroupChat ?
-                                        "https://cdn4.iconfinder.com/data/icons/internet-and-social-networking/32/i22_internet-512.png"
+                                        selectUser.grpPhoto
                                         :
                                         getSender(selectUser?.users, getUserDetails()).photo
                                         }`} 
-                                alt="Chat image" />
+                                alt="Chat pic" />
                                 {
                                     getOnline(selectUser, onlineUsers, getUserDetails()) &&
                                     <span className="h-3 w-3 rounded-full bg-emerald-500 absolute right-0.5 ring-2 ring-white -bottom-0.5"></span>
                                 }
                             </div>
-                            <div className="flex flex-col">
-                                <span className="font-bold text-black">
+                            <div className="flex flex-col pl-1 md:pl-0 max-w-[170px] md:max-w-[480px]">
+                                <span className="font-bold text-black truncate">
                                     {selectUser.isGroupChat ?
                                         selectUser.chatName : getSender(selectUser?.users, getUserDetails()).firstname + ' ' + getSender(selectUser?.users, getUserDetails()).lastname //getSender(selectUser.users, getUserDetails())//
                                     }
                                 </span>
-                                <span className={`${selectUser.isGroupChat && 'hidden'} text-xs md:text-sm text-[#777e83]`}>
-                                    {
-                                        getOnline(selectUser, onlineUsers, getUserDetails()) ?
-                                            'Active Now'
-                                            :
-                                            'last seen 19/05/2022 at 03:56 pm'
-                                    }
-                                </span>
+                                {
+                                    selectUser.isGroupChat ? 
+                                        <span className='truncate'>
+                                            {
+                                                selectUser.users.map((u,i)=>
+                                                    <span key={i} className='text-xs truncate md:text-sm text-[#777e83]'>{u.firstname+", "}</span>
+                                                )
+                                            }
+                                        </span>
+                                        :
+                                        <span className='truncate text-xs md:text-sm text-[#777e83]'>
+                                            {
+                                                getOnline(selectUser, onlineUsers, getUserDetails()) ?
+                                                    'Active Now'
+                                                    :
+                                                    'last seen 19/05/2022 at 03:56 pm'
+                                            }
+                                        </span>
+                                }
                             </div>
                         </div>
                         <div className="flex flex-none items-center space-x-4 md:space-x-6 lg:space-x-8">

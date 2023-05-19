@@ -1,22 +1,14 @@
 import React from 'react'
 import ReactScrollableFeed from 'react-scrollable-feed'
 import { getUserDetails } from '../helper/sessionHelper'
-import Lottie from "react-lottie";
-import animationData from "../assets/animation/typing.json";
 import { useSelector } from 'react-redux';
 import moment from "moment/moment"
+import Typing from '../assets/animation/Typing';
+
 
 const Message = ({ messages, isTyping, typingUser }) => {
     const onlineUsers = useSelector((state) => state.setting.onlineUsers)
-    const defaultOptions = {
-        loop: true,
-        autoplay: true,
-        animationData: animationData,
-        rendererSettings: {
-            preserveAspectRatio: "xMidYMid slice",
-        },
-    };
-
+    
     const isPlaceDate = (messages, i) => {
         if (i = 0 || moment((messages[i]?.createdAt)).diff(messages[i - 1]?.createdAt, 'days'))
             return true
@@ -70,33 +62,37 @@ const Message = ({ messages, isTyping, typingUser }) => {
                                         (
                                             <div className="flex w-full space-x-3 max-w-sm ml-auto justify-end">
                                                 {
-                                                    isSenderSingleMsg(messages, msg, i) ?
+                                                    isSenderSingleMsg(messages, msg, i) || 
+                                                        (isPlaceDate(messages, i) && isPlaceDate(messages, i + 1)) ||
+                                                          (isPlaceDate(messages, i) && msg.sender._id!==messages[i+1].sender._id) ?
                                                         (
-                                                            <div className="bg-[#0C7075] text-white p-2 mt-1 rounded-l-[20px] rounded-r-[20px]">
+                                                            <div className="bg-[#0C7075] text-white p-2 mt-1 ml-24 md:ml-0 rounded-l-[20px] rounded-r-[20px]">
                                                                 <p className="text-sm font-normal px-1 md:px-3">{msg.content}</p>
                                                             </div>
                                                         ) : isSamesenderUpperMsg(messages, msg, i) ?
                                                             (
-                                                                <div className="bg-[#0C7075] mt-1 text-white p-2 rounded-tr-[20px] rounded-br-md rounded-l-[20px]">
+                                                                <div className="bg-[#0C7075] mt-1 text-white p-2 ml-24 md:ml-0 rounded-tr-[20px] rounded-br-md rounded-l-[20px]">
                                                                     <p className="text-sm font-normal px-1 md:px-3">{msg.content}</p>
                                                                 </div>
                                                             ) : isSamesenderLowerMsg(messages, msg, i) ?
                                                                 (
-                                                                    <div className="bg-[#0C7075] text-white p-2 rounded-l-[20px] rounded-br-[20px] rounded-tr-md">
+                                                                    <div className="bg-[#0C7075] text-white p-2 ml-24 md:ml-0 rounded-l-[20px] rounded-br-[20px] rounded-tr-md">
                                                                         <p className="text-sm font-normal px-1 md:px-3">{msg.content}</p>
                                                                     </div>
                                                                 ) : (
-                                                                    <div className="bg-[#0C7075] text-white p-2 rounded-l-[20px] rounded-r-md">
+                                                                    <div className="bg-[#0C7075] text-white p-2 ml-24 md:ml-0 rounded-l-[20px] rounded-r-md">
                                                                         <p className="text-sm font-normal px-1 md:px-3">{msg.content}</p>
                                                                     </div>
                                                                 )
                                                 }
                                             </div>
-                                        ) : isSenderSingleMsg(messages, msg, i) ?
+                                        ) : isSenderSingleMsg(messages, msg, i) || 
+                                                (isPlaceDate(messages, i) && isPlaceDate(messages, i + 1)) ||
+                                                    (isPlaceDate(messages, i) && msg.sender._id!==messages[i+1].sender._id)?
                                             (
-                                                <div className='flex w-full space-x-3 mt-1'>
+                                                <div className='flex max-w-sm space-x-3 mt-3 mr-24 md:mr-12'>
                                                     <div className="flex-shrink-0 h-8 w-8 rounded-full mt-auto relative">
-                                                        <img className="object-cover w-8 h-8 rounded-full" src={msg.sender.photo} alt="Sender Image" />
+                                                        <img className="object-cover w-8 h-8 rounded-full" src={msg.sender.photo} alt="Sender pic" />
                                                         {
                                                             onlineUsers.find((u) => u.userId === msg.sender._id)
                                                             &&
@@ -115,7 +111,7 @@ const Message = ({ messages, isTyping, typingUser }) => {
                                                 </div>
                                             ) : isSamesenderUpperMsg(messages, msg, i) ?
                                                 (
-                                                    <div className="flex w-full ml-[44px] space-x-3 max-w-[339px] mt-1">
+                                                    <div className="flex w-full ml-[44px] space-x-3 max-w-[339px] mt-3 mr-24 md:mr-12">
                                                         <div>
                                                             {
                                                                 msg.chat.isGroupChat &&
@@ -128,25 +124,23 @@ const Message = ({ messages, isTyping, typingUser }) => {
                                                     </div>
                                                 ) : isSamesenderLowerMsg(messages, msg, i) ?
                                                     (
-                                                        <div className="mt-px max-w-sm mr-12">
+                                                        <div className="mt-px max-w-sm mr-24 md:mr-12">
                                                             <div className='flex w-full space-x-3'>
                                                                 <div className="flex-shrink-0 h-8 w-8 mt-auto rounded-full relative">
-                                                                    <img className="object-cover w-8 h-8 rounded-full" src={msg.sender.photo} alt="Sender Image" />
+                                                                    <img className="object-cover w-8 h-8 rounded-full" src={msg.sender.photo} alt="Sender pic" />
                                                                     {
                                                                         onlineUsers.find((u) => u.userId === msg.sender._id)
                                                                         &&
                                                                         <span className="h-2 w-2 rounded-full bg-emerald-500 absolute right-0.5 ring-2 ring-white bottom-0"></span>
                                                                     }
                                                                 </div>
-                                                                <div>
-                                                                    <div className="bg-gray-300 p-2 rounded-r-[20px] rounded-bl-[20px] rounded-tl-md">
-                                                                        <p className="text-sm px-3">{msg.content}</p>
-                                                                    </div>
+                                                                <div className="bg-gray-300 p-2 rounded-r-[20px] rounded-bl-[20px] rounded-tl-md">
+                                                                    <p className="text-sm px-3">{msg.content}</p>
                                                                 </div>
                                                             </div>
                                                         </div>
                                                     ) : (
-                                                        <div className="flex w-full mt-px ml-[44px] space-x-3 max-w-[339px]">
+                                                        <div className="flex w-full mt-px ml-[44px] space-x-3 max-w-[339px] mr-24 md:mr-12">
                                                             <div>
                                                                 <div className="bg-gray-300 p-2 rounded-r-[20px] rounded-l-md">
                                                                     <p className="text-sm px-3">{msg.content}</p>
@@ -164,18 +158,12 @@ const Message = ({ messages, isTyping, typingUser }) => {
             {
                 isTyping ?
                     <div className='flex w-full space-x-3 mt-4'>
-                        <div className="flex-shrink-0 h-8 w-8 rounded-full mt-auto relative">
-                            <img className="object-cover w-8 h-8 rounded-full" src={typingUser.photo} alt="" />
+                        <div className="flex-shrink-0 h-8 w-8 mr-1 rounded-full mt-auto relative">
+                            <img className="object-cover w-8 h-8 rounded-full" src={typingUser.photo} alt="User pic" />
                             <span className="h-2 w-2 rounded-full bg-emerald-500 absolute right-0.5 ring-1 ring-white bottom-0"></span>
                         </div>
                         <div>
-                            <Lottie
-                                options={defaultOptions}
-                                width={70}
-                                height={30}
-                                classNameName='mt-0.5'
-                                style={{ marginLeft: 0 }}
-                            />
+                        <Typing />
                         </div>
                     </div>
                     : <></>

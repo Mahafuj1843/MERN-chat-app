@@ -26,21 +26,21 @@ function App() {
       </Fragment>
     );
   }else{
-    return (
-      <Fragment>
-        <BrowserRouter>
-          <Routes>
-            <Route exact path='/' element={<LoginPage />}/>
-            <Route exact path='/register' element={<RegistrationPage />}/>
-            <Route exact path='/forgetPassword' element={<ForgetPasswordPage />}/>
-            <Route exact path='/resetPassword/:token' element={<ResetPasswordPage />}/>
-            <Route exact path={'*'}  element={<NotFoundPage />}/>
-          </Routes>
-        </BrowserRouter>
-        <FullscreenLoader />
-        <Toaster position="top-right" reverseOrder={false}/>
-      </Fragment>
-    );
+  return (
+    <Fragment>
+      <BrowserRouter>
+        <Routes>
+          <Route exact path='/' element={<LoginPage />} />
+          <Route exact path='/register' element={<RegistrationPage />} />
+          <Route exact path='/forgetPassword' element={<ForgetPasswordPage />} />
+          <Route exact path='/resetPassword/:token' element={<ResetPasswordPage />} />
+          <Route exact path={'*'} element={<NotFoundPage />} />
+        </Routes>
+      </BrowserRouter>
+      <FullscreenLoader />
+      <Toaster position="top-right" reverseOrder={false} />
+    </Fragment>
+  );
   }
 }
 

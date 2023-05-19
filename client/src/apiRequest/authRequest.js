@@ -1,10 +1,11 @@
 import axios from "axios";
 import { ErrorToast, SuccessToast } from "../helper/formHelper";
-import { getToken, removeSessions, setToken, setUserDetails } from "../helper/sessionHelper";
+import { getToken, getUserDetails, removeSessions, setToken, setUserDetails } from "../helper/sessionHelper";
 import { hideLoader, showLoader } from "../redux/state/settingSlice";
 import store from "../redux/store/store";
 import { setProfile } from "../redux/state/profileSlice";
 import { setsearchUsers } from "../redux/state/chatSlice";
+import { socket } from "../components/ChatBox";
 const BaseURL = "https://instachat-api.onrender.com/api"
 const AxiosHeader = { headers: { "token": getToken() } }
 
@@ -70,6 +71,7 @@ export const Logout = async() =>{
     return await axios.get(URL).then((res) => {
         store.dispatch(hideLoader())
         if (res.status === 200) {
+            socket.emit("logout", getUserDetails()._id)
             removeSessions()
             SuccessToast("Logout Successfull.")
             return true;
