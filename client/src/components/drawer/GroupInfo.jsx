@@ -138,7 +138,7 @@ const GroupInfo = ({ state, dispatch }) => {
                 }
               </div>
               {selectUser?.isGroupChat &&
-                <div className='flex flex-col gap-2 max-[389px]:h-[65%] max-[450px]:h-[75%] max-[820px]:h-[80%] max-[1024px]:h-[62%] xl:h-[65%]'>
+                <div className='flex flex-col gap-2 max-[360px]:h-[67%] max-[389px]:h-[65%] max-[450px]:h-[75%] max-[820px]:h-[80%] max-[1024px]:h-[62%] xl:h-[65%]'>
                   <div className='w-full px-3 md:px-5 flex justify-between'>
                     <span className='text-sm'>{selectUser.users.length} participants</span>
                     <svg viewBox="0 0 24 24" width="24" height="24" className="">

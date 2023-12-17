@@ -96,7 +96,7 @@ const Message = ({ messages, isTyping, typingUser }) => {
                                                         {
                                                             onlineUsers.find((u) => u.userId === msg.sender._id)
                                                             &&
-                                                            <span className="h-2 w-2 rounded-full bg-emerald-500 absolute right-0.5 ring-2 ring-white bottom-0"></span>
+                                                            <span className="h-2 w-2 rounded-full bg-emerald-500 absolute right-0.5 ring-2 ring-gray-300 bottom-0"></span>
                                                         }
                                                     </div>
                                                     <div>
@@ -131,7 +131,7 @@ const Message = ({ messages, isTyping, typingUser }) => {
                                                                     {
                                                                         onlineUsers.find((u) => u.userId === msg.sender._id)
                                                                         &&
-                                                                        <span className="h-2 w-2 rounded-full bg-emerald-500 absolute right-0.5 ring-2 ring-white bottom-0"></span>
+                                                                        <span className="h-2 w-2 rounded-full bg-emerald-500 absolute right-0.5 ring-2 ring-gray-300 bottom-0"></span>
                                                                     }
                                                                 </div>
                                                                 <div className="bg-gray-300 p-2 rounded-r-[20px] rounded-bl-[20px] rounded-tl-md">
@@ -160,7 +160,7 @@ const Message = ({ messages, isTyping, typingUser }) => {
                     <div className='flex w-full space-x-3 mt-4'>
                         <div className="flex-shrink-0 h-8 w-8 mr-1 rounded-full mt-auto relative">
                             <img className="object-cover w-8 h-8 rounded-full" src={typingUser.photo} alt="User pic" />
-                            <span className="h-2 w-2 rounded-full bg-emerald-500 absolute right-0.5 ring-1 ring-white bottom-0"></span>
+                            <span className="h-2 w-2 rounded-full bg-emerald-500 absolute right-0.5 ring-1 ring-gray-300 bottom-0"></span>
                         </div>
                         <div>
                         <Typing />
